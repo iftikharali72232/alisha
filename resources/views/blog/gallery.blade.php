@@ -28,8 +28,11 @@
         <!-- Gallery Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach($galleries as $gallery)
-            <div class="group relative overflow-hidden rounded-2xl cursor-pointer" onclick="openLightbox('{{ asset('storage/' . $gallery->image) }}', '{{ $gallery->title }}')" style="padding-bottom: 100%;">
-                <img src="{{ asset('storage/' . $gallery->image) }}" alt="{{ $gallery->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            @php
+                $imageUrl = Str::startsWith($gallery->image, 'http') ? $gallery->image : Storage::url($gallery->image);
+            @endphp
+            <div class="group relative overflow-hidden rounded-2xl cursor-pointer" onclick="openLightbox('{{ $imageUrl }}', '{{ $gallery->title }}')" style="padding-bottom: 100%;">
+                <img src="{{ $imageUrl }}" alt="{{ $gallery->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition duration-300">
                     <h3 class="text-white font-medium">{{ $gallery->title }}</h3>

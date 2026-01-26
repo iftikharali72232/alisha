@@ -26,7 +26,10 @@
                             <a href="{{ route('blog.show', $post->slug) }}" class="md:w-1/3 flex-shrink-0">
                                 <div class="relative overflow-hidden" style="padding-bottom: 75%;">
                                     @if($post->featured_image)
-                                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-cover hover:scale-105 transition duration-300">
+                                    @php
+                                        $featuredImageUrl = Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image);
+                                    @endphp
+                                    <img src="{{ $featuredImageUrl }}" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-cover hover:scale-105 transition duration-300">
                                     @else
                                     <div class="absolute inset-0 bg-gradient-to-br from-rose-400 to-purple-500"></div>
                                     @endif
@@ -46,7 +49,7 @@
                                 <p class="text-gray-600 line-clamp-2 mb-4">{{ Str::limit(strip_tags($post->content), 150) }}</p>
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
-                                        <img src="{{ $post->user->avatar ? asset('storage/' . $post->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name) . '&background=f43f5e&color=fff' }}" alt="{{ $post->user->name }}" class="w-8 h-8 rounded-full">
+                                        <img src="{{ $post->user->avatar_url }}" alt="{{ $post->user->name }}" class="w-8 h-8 rounded-full">
                                         <span class="ml-2 text-sm text-gray-700">{{ $post->user->name }}</span>
                                     </div>
                                     <a href="{{ route('blog.show', $post->slug) }}" class="text-rose-600 hover:text-rose-700 text-sm font-medium">

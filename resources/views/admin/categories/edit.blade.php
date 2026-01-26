@@ -44,7 +44,7 @@
                 @if($category->image)
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                    <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}" class="w-32 h-32 object-cover rounded-lg">
+                    <img src="{{ Str::startsWith($category->image, 'http') ? $category->image : Storage::url($category->image) }}" alt="{{ $category->name }}" class="w-32 h-32 object-cover rounded-lg">
                 </div>
                 @endif
                 

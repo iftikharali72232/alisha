@@ -3,12 +3,25 @@
 @section('title', $post->title)
 @section('meta_description', Str::limit(strip_tags($post->content), 160))
 
+@php
+    $galleryImages = $post->gallery_images;
+    if ($galleryImages && is_string($galleryImages)) {
+        $galleryImages = json_decode($galleryImages, true) ?: [];
+    }
+    if (!is_array($galleryImages)) {
+        $galleryImages = [];
+    }
+@endphp
+
 @section('content')
 <article>
     <!-- Featured Image -->
     @if($post->featured_image)
+    @php
+        $featuredImageUrl = Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image);
+    @endphp
     <div class="relative h-96 md:h-[500px] bg-gray-900">
-        <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover opacity-90">
+        <img src="{{ $featuredImageUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover opacity-90">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-8">
             <div class="max-w-4xl mx-auto">
@@ -20,7 +33,7 @@
                 <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">{{ $post->title }}</h1>
                 <div class="flex items-center space-x-4 text-white/80">
                     <div class="flex items-center">
-                        <img src="{{ $post->user->avatar ? asset('storage/' . $post->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name) . '&background=f43f5e&color=fff' }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full">
+                        <img src="{{ $post->user->avatar_url }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full object-cover">
                         <span class="ml-2">{{ $post->user->name }}</span>
                     </div>
                     <span>•</span>
@@ -42,7 +55,7 @@
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $post->title }}</h1>
             <div class="flex items-center justify-center space-x-4 text-white/80">
                 <div class="flex items-center">
-                    <img src="{{ $post->user->avatar ? asset('storage/' . $post->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name) . '&background=f43f5e&color=fff' }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full">
+                    <img src="{{ $post->user->avatar_url }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full object-cover">
                     <span class="ml-2">{{ $post->user->name }}</span>
                 </div>
                 <span>•</span>
@@ -63,20 +76,18 @@
                     </div>
                     
                     <!-- Gallery Images -->
-                    @if($post->gallery_images)
-                    @php $galleryImages = json_decode($post->gallery_images, true); @endphp
-                    @if(is_array($galleryImages) && count($galleryImages) > 0)
+                    @if(count($galleryImages) > 0)
                     <div class="mt-8 pt-8 border-t">
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Gallery</h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             @foreach($galleryImages as $image)
-                            <a href="{{ asset('storage/' . $image) }}" target="_blank" class="block">
-                                <img src="{{ asset('storage/' . $image) }}" alt="Gallery image" class="w-full h-40 object-cover rounded-lg hover:opacity-90 transition">
+                            @php $galleryUrl = Str::startsWith($image, ['http://', 'https://']) ? $image : Storage::url($image); @endphp
+                            <a href="{{ $galleryUrl }}" target="_blank" class="block">
+                                <img src="{{ $galleryUrl }}" alt="Gallery image" class="w-full h-40 object-cover rounded-lg hover:opacity-90 transition">
                             </a>
                             @endforeach
                         </div>
                     </div>
-                    @endif
                     @endif
                     
                     <!-- Tags -->
@@ -162,16 +173,63 @@
                     
                     <!-- Comments List -->
                     <div class="space-y-6">
-                        @forelse($post->comments->where('status', 'approved') as $comment)
-                        <div class="flex space-x-4">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->name) }}&background=f43f5e&color=fff" alt="{{ $comment->name }}" class="w-12 h-12 rounded-full flex-shrink-0">
-                            <div class="flex-1">
-                                <div class="bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="font-medium text-gray-900">{{ $comment->name }}</h4>
-                                        <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                        @forelse($post->comments->where('status', 'approved')->whereNull('parent_id') as $comment)
+                        <div class="comment-item" id="comment-{{ $comment->id }}">
+                            <div class="flex space-x-4">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->name) }}&background=f43f5e&color=fff" alt="{{ $comment->name }}" class="w-12 h-12 rounded-full flex-shrink-0">
+                                <div class="flex-1">
+                                    <div class="bg-gray-50 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="font-medium text-gray-900">{{ $comment->name }}</h4>
+                                            <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <p class="text-gray-600">{{ $comment->content }}</p>
+                                        <button onclick="showReplyForm({{ $comment->id }})" class="text-sm text-rose-600 hover:text-rose-700 mt-2 font-medium">
+                                            <i class="fas fa-reply mr-1"></i> Reply
+                                        </button>
                                     </div>
-                                    <p class="text-gray-600">{{ $comment->content }}</p>
+                                    
+                                    <!-- Reply Form (Hidden by default) -->
+                                    <div id="reply-form-{{ $comment->id }}" class="mt-4 hidden">
+                                        <form action="{{ route('blog.reply', $post->slug) }}" method="POST" class="bg-gray-50 rounded-lg p-4">
+                                            @csrf
+                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                            <div class="grid grid-cols-2 gap-4 mb-3">
+                                                <input type="text" name="name" placeholder="Your Name *" required 
+                                                    class="px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                                                <input type="email" name="email" placeholder="Your Email *" required 
+                                                    class="px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                                            </div>
+                                            <textarea name="content" rows="2" placeholder="Your reply *" required 
+                                                class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm mb-3"></textarea>
+                                            <div class="flex space-x-2">
+                                                <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition text-sm">
+                                                    Post Reply
+                                                </button>
+                                                <button type="button" onclick="hideReplyForm({{ $comment->id }})" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Replies -->
+                                    @if($comment->replies->count() > 0)
+                                    <div class="mt-4 ml-4 space-y-4 border-l-2 border-rose-200 pl-4">
+                                        @foreach($comment->replies as $reply)
+                                        <div class="flex space-x-3" id="comment-{{ $reply->id }}">
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($reply->name) }}&background=94a3b8&color=fff" alt="{{ $reply->name }}" class="w-10 h-10 rounded-full flex-shrink-0">
+                                            <div class="flex-1 bg-gray-100 rounded-lg p-3">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h5 class="font-medium text-gray-900 text-sm">{{ $reply->name }}</h5>
+                                                    <span class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-gray-600 text-sm">{{ $reply->content }}</p>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -198,7 +256,10 @@
                     <a href="{{ route('blog.show', $related->slug) }}" class="block">
                         <div class="relative overflow-hidden" style="padding-bottom: 60%;">
                             @if($related->featured_image)
-                            <img src="{{ asset('storage/' . $related->featured_image) }}" alt="{{ $related->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            @php
+                                $relatedImageUrl = Str::startsWith($related->featured_image, ['http://', 'https://']) ? $related->featured_image : Storage::url($related->featured_image);
+                            @endphp
+                            <img src="{{ $relatedImageUrl }}" alt="{{ $related->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300">
                             @else
                             <div class="absolute inset-0 bg-gradient-to-br from-rose-400 to-purple-500"></div>
                             @endif
@@ -238,4 +299,21 @@
         border-radius: 0.5rem;
     }
 </style>
+@endsection
+
+@section('scripts')
+<script>
+    function showReplyForm(commentId) {
+        // Hide all other reply forms first
+        document.querySelectorAll('[id^="reply-form-"]').forEach(form => {
+            form.classList.add('hidden');
+        });
+        // Show the clicked one
+        document.getElementById('reply-form-' + commentId).classList.remove('hidden');
+    }
+    
+    function hideReplyForm(commentId) {
+        document.getElementById('reply-form-' + commentId).classList.add('hidden');
+    }
+</script>
 @endsection

@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard') - VisionSphere – Explore your world of ideas and stories.</title>
+    @php
+        $siteName = \App\Models\Setting::get('site_name', 'Vision Sphere');
+        $siteFavicon = \App\Models\Setting::get('site_favicon');
+    @endphp
+    <title>@yield('title', 'Admin Dashboard') | {{ $siteName }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    @if($siteFavicon)
+        <link rel="icon" type="image/png" href="{{ Storage::url($siteFavicon) }}">
+    @else
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
+    @endif
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .sidebar-transition { transition: transform 0.3s ease-in-out; }
         .mobile-menu-overlay { backdrop-filter: blur(4px); }
@@ -46,7 +60,7 @@
                             </button>
                             <div id="profile-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 hidden">
                                 <div class="py-1">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50">Profile Settings</a>
+                                    <a href="{{ route('admin.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50">Profile Settings</a>
                                     <form method="POST" action="{{ route('admin.logout') }}">
                                         @csrf
                                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50">Logout</button>
@@ -65,8 +79,13 @@
         </div>
     </div>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome (CSS) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" referrerpolicy="no-referrer">
+
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/a0gi9ib6oscgvosym1nvjux8wrne5tlwtqrltkwgxf9t8d2f/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    @yield('scripts')
 
     <script>
         function toggleMobileMenu() {

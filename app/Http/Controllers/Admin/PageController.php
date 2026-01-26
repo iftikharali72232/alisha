@@ -29,7 +29,7 @@ class PageController extends Controller
             'content' => 'required|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
-            'featured_image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'is_active' => 'boolean',
             'order' => 'nullable|integer',
         ]);
@@ -66,7 +66,7 @@ class PageController extends Controller
             'content' => 'required|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
-            'featured_image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'is_active' => 'boolean',
             'order' => 'nullable|integer',
         ]);

@@ -63,27 +63,27 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
-                    @if(isset($settings['logo']) && $settings['logo'])
-                    <div class="mb-2">
-                        <img src="{{ Storage::url($settings['logo']) }}" alt="Logo" class="h-16 object-contain">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Site Logo</label>
+                    @if(isset($settingsArray['site_logo']) && $settingsArray['site_logo'])
+                    <div class="mb-2 p-2 bg-gray-100 rounded-lg inline-block">
+                        <img src="{{ Storage::url($settingsArray['site_logo']) }}" alt="Logo" class="h-16 object-contain">
                     </div>
                     @endif
-                    <input type="file" name="logo" accept="image/*"
+                    <input type="file" name="site_logo" accept="image/*"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Recommended: 200x60px</p>
+                    <p class="text-xs text-gray-500 mt-1">Recommended: 200x60px (PNG, SVG preferred)</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Favicon</label>
-                    @if(isset($settings['favicon']) && $settings['favicon'])
-                    <div class="mb-2">
-                        <img src="{{ Storage::url($settings['favicon']) }}" alt="Favicon" class="h-8 w-8 object-contain">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Site Favicon</label>
+                    @if(isset($settingsArray['site_favicon']) && $settingsArray['site_favicon'])
+                    <div class="mb-2 p-2 bg-gray-100 rounded-lg inline-block">
+                        <img src="{{ Storage::url($settingsArray['site_favicon']) }}" alt="Favicon" class="h-8 w-8 object-contain">
                     </div>
                     @endif
-                    <input type="file" name="favicon" accept="image/*"
+                    <input type="file" name="site_favicon" accept="image/*"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Recommended: 32x32px</p>
+                    <p class="text-xs text-gray-500 mt-1">Recommended: 32x32px (ICO, PNG preferred)</p>
                 </div>
             </div>
         </div>

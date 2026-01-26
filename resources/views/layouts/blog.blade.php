@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'VisionSphere – Explore your world of ideas and stories.') - {{ \App\Models\Setting::get('site_name', 'VisionSphere – Explore your world of ideas and stories.') }}</title>
-    <meta name="description" content="@yield('meta_description', \App\Models\Setting::get('site_description', 'A beautiful blog'))">
+    @php
+        $siteName = \App\Models\Setting::get('site_name', 'Vision Sphere');
+        $siteFavicon = \App\Models\Setting::get('site_favicon');
+    @endphp
+    <title>@yield('title', 'Home') | {{ $siteName }}</title>
+    <meta name="description" content="@yield('meta_description', \App\Models\Setting::get('site_description', 'Explore your world of ideas and stories'))">
+    
+    <!-- Favicon -->
+    @if($siteFavicon)
+        <link rel="icon" type="image/png" href="{{ Storage::url($siteFavicon) }}">
+    @else
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
+    @endif
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,9 +32,14 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-10 rounded-lg object-cover">
-                        <span class="text-xl font-bold text-gray-900">VisionSphere – Explore your world of ideas and stories.</span>
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                        @php $siteLogo = \App\Models\Setting::get('site_logo'); @endphp
+                        @if($siteLogo)
+                            <img src="{{ Storage::url($siteLogo) }}" alt="{{ $siteName }}" class="h-10 w-auto" style="max-width: none; height: 40px; width: auto;">
+                        @else
+                            <img src="{{ asset('images/logo.svg?v=' . time()) }}" alt="{{ $siteName }}" class="h-10 w-auto" style="max-width: none; height: 40px; width: auto;">
+                        @endif
+                        <span class="text-xl font-bold text-gray-900 hidden sm:inline">{{ $siteName }}</span>
                     </a>
                 </div>
                 
@@ -89,7 +106,7 @@
                 <!-- About -->
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-2 mb-4">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-10 rounded-lg object-cover">
+                        <img src="{{ asset('images/logo.svg?v=' . time()) }}" alt="Logo" class="h-10 w-10 rounded-lg" style="width: 40px; height: 40px;">
                         <span class="text-xl font-bold text-white">VisionSphere – Explore your world of ideas and stories.</span>
                     </div>
                     <p class="text-gray-400 mb-4">{{ \App\Models\Setting::get('site_description', 'A beautiful blog sharing insights and stories.') }}</p>

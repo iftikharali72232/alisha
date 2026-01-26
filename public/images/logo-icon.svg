@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+  <defs>
+    <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="50%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Logo Icon Only - Eye/Vision Sphere -->
+  <g transform="translate(5, 5)">
+    <!-- Outer glow ring -->
+    <circle cx="25" cy="25" r="24" fill="none" stroke="url(#icon-gradient)" stroke-width="2" opacity="0.5"/>
+    <!-- Main sphere -->
+    <circle cx="25" cy="25" r="20" fill="url(#icon-gradient)"/>
+    <!-- Inner white eye -->
+    <ellipse cx="25" cy="25" rx="12" ry="9" fill="white"/>
+    <!-- Pupil -->
+    <circle cx="25" cy="25" r="6" fill="#1e1b4b"/>
+    <!-- Eye highlight -->
+    <circle cx="27" cy="23" r="2.5" fill="white" opacity="0.9"/>
+    <!-- Decorative orbit -->
+    <ellipse cx="25" cy="25" rx="18" ry="6" fill="none" stroke="white" stroke-width="1" opacity="0.4" transform="rotate(-25, 25, 25)"/>
+  </g>
+</svg>

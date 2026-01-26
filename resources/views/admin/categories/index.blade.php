@@ -43,7 +43,7 @@
                 <tr class="hover:bg-gray-50 transition-colors duration-200">
                     <td class="px-6 py-4">
                         @if($category->image)
-                            <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}" class="w-12 h-12 rounded-lg object-cover">
+                            <img src="{{ Str::startsWith($category->image, 'http') ? $category->image : Storage::url($category->image) }}" alt="{{ $category->name }}" class="w-12 h-12 rounded-lg object-cover">
                         @else
                             <div class="w-12 h-12 rounded-lg bg-rose-100 flex items-center justify-center">
                                 <i class="fas fa-folder text-rose-500"></i>

@@ -10,6 +10,7 @@ use App\Models\Slider;
 use App\Models\Gallery;
 use App\Models\Setting;
 use App\Models\Comment;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -39,8 +40,16 @@ class BlogController extends Controller
             ->orderBy('comments_count', 'desc')
             ->take(5)
             ->get();
+
+        // Get featured shops for display on homepage
+        $featuredShops = Shop::where('status', 'active')
+            ->whereIn('subscription_status', ['active', 'trial'])
+            ->with('activeSubscription.plan')
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get();
         
-        return view('blog.index', compact('featuredPosts', 'posts', 'categories', 'sliders', 'popularPosts'));
+        return view('blog.index', compact('featuredPosts', 'posts', 'categories', 'sliders', 'popularPosts', 'featuredShops'));
     }
     
     public function show($slug)
@@ -48,7 +57,12 @@ class BlogController extends Controller
         $post = Post::where('slug', $slug)
             ->where('status', 'published')
             ->with(['category', 'user', 'tags', 'comments' => function($query) {
-                $query->where('status', 'approved')->orderBy('created_at', 'desc');
+                $query->where('status', 'approved')
+                    ->whereNull('parent_id')
+                    ->with(['replies' => function($q) {
+                        $q->where('status', 'approved')->orderBy('created_at', 'asc');
+                    }])
+                    ->orderBy('created_at', 'desc');
             }])
             ->firstOrFail();
             
@@ -177,14 +191,46 @@ class BlogController extends Controller
         return back()->with('success', 'Your comment has been submitted and is awaiting moderation.');
     }
     
+    public function storeReply(Request $request, $slug)
+    {
+        $post = Post::where('slug', $slug)->firstOrFail();
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'content' => 'required|string|max:1000',
+            'parent_id' => 'required|exists:comments,id',
+        ]);
+        
+        // Verify the parent comment belongs to this post
+        $parentComment = Comment::where('id', $validated['parent_id'])
+            ->where('post_id', $post->id)
+            ->firstOrFail();
+        
+        Comment::create([
+            'post_id' => $post->id,
+            'parent_id' => $parentComment->id,
+            'user_id' => auth()->id(),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'content' => $validated['content'],
+            'approved' => false,
+            'status' => 'pending',
+        ]);
+        
+        return back()->with('success', 'Your reply has been submitted and is awaiting moderation.');
+    }
+    
     public function about()
     {
-        return view('blog.about');
+        $page = Page::where('slug', 'about-us')->where('is_active', true)->first();
+        return view('blog.about', compact('page'));
     }
     
     public function contact()
     {
-        return view('blog.contact');
+        $page = Page::where('slug', 'contact-us')->where('is_active', true)->first();
+        return view('blog.contact', compact('page'));
     }
     
     public function sendContact(Request $request)

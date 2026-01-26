@@ -17,7 +17,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
                 <div class="mb-4">
                     @if($user->avatar)
-                        <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full mx-auto object-cover">
+                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full mx-auto object-cover">
                     @else
                         <div class="w-32 h-32 rounded-full mx-auto bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center">
                             <span class="text-4xl font-bold text-white">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
@@ -94,15 +94,56 @@
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                        
+                        <!-- Current Avatar Preview -->
+                        <div class="mb-4" id="avatarPreviewContainer">
+                            @if($user->avatar)
+                                <img src="{{ $user->avatar_url }}" alt="Current avatar" class="w-20 h-20 rounded-full object-cover border-2 border-rose-500" id="currentAvatar">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center border-2 border-rose-500" id="currentAvatar">
+                                    <span class="text-2xl font-bold text-white">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Avatar Selection -->
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Choose a pre-made avatar:</p>
+                            <div class="flex flex-wrap gap-3">
+                                @php
+                                    $avatarStyles = [
+                                        ['bg' => 'from-rose-400 to-pink-500', 'icon' => 'user'],
+                                        ['bg' => 'from-blue-400 to-indigo-500', 'icon' => 'user-tie'],
+                                        ['bg' => 'from-green-400 to-teal-500', 'icon' => 'user-astronaut'],
+                                        ['bg' => 'from-purple-400 to-violet-500', 'icon' => 'user-ninja'],
+                                        ['bg' => 'from-orange-400 to-red-500', 'icon' => 'user-secret'],
+                                        ['bg' => 'from-cyan-400 to-blue-500', 'icon' => 'user-graduate'],
+                                        ['bg' => 'from-yellow-400 to-orange-500', 'icon' => 'smile'],
+                                        ['bg' => 'from-pink-400 to-rose-500', 'icon' => 'heart'],
+                                    ];
+                                @endphp
+                                @foreach($avatarStyles as $index => $style)
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="avatar_preset" value="{{ $index }}" class="hidden peer">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r {{ $style['bg'] }} flex items-center justify-center peer-checked:ring-4 ring-rose-300 transition hover:scale-110">
+                                        <i class="fas fa-{{ $style['icon'] }} text-white text-lg"></i>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        
+                        <!-- Or upload custom avatar -->
                         <div class="flex items-center space-x-4">
                             <input type="file" name="avatar" id="avatar" accept="image/*" class="hidden">
                             <button type="button" onclick="document.getElementById('avatar').click()" 
                                 class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-                                <i class="fas fa-upload mr-2"></i>Choose Photo
+                                <i class="fas fa-upload mr-2"></i>Upload Custom Photo
                             </button>
                             <span id="avatarFileName" class="text-sm text-gray-500">No file chosen</span>
                         </div>
+                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 2MB</p>
                     </div>
                     
                     <div class="pt-4">
@@ -213,6 +254,30 @@
 document.getElementById('avatar').addEventListener('change', function(e) {
     const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
     document.getElementById('avatarFileName').textContent = fileName;
+    
+    // Preview uploaded image
+    if (e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const container = document.getElementById('avatarPreviewContainer');
+            container.innerHTML = `<img src="${event.target.result}" alt="Preview" class="w-20 h-20 rounded-full object-cover border-2 border-rose-500">`;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+        
+        // Deselect preset avatars
+        document.querySelectorAll('input[name="avatar_preset"]').forEach(radio => {
+            radio.checked = false;
+        });
+    }
+});
+
+// Handle preset avatar selection
+document.querySelectorAll('input[name="avatar_preset"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        // Clear custom file input
+        document.getElementById('avatar').value = '';
+        document.getElementById('avatarFileName').textContent = 'No file chosen';
+    });
 });
 </script>
 @endsection

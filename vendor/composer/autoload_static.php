@@ -42,6 +42,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
+        '11fc3f4d0ee708fa878331ce68d5b617' => __DIR__ . '/../..' . '/app/Helpers/ImageHelper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -345,8 +346,8 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -378,8 +379,8 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         ),
         'Nette\\' => 
         array (
-            0 => __DIR__ . '/..' . '/nette/utils/src',
-            1 => __DIR__ . '/..' . '/nette/schema/src',
+            0 => __DIR__ . '/..' . '/nette/schema/src',
+            1 => __DIR__ . '/..' . '/nette/utils/src',
         ),
         'Monolog\\' => 
         array (
@@ -391,8 +392,8 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -531,7 +532,36 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
     );
 
     public static $classMap = array (
+        'App\\Helpers\\ImageHelper' => __DIR__ . '/../..' . '/app/Helpers/ImageHelper.php',
+        'App\\Http\\Controllers\\Admin\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AuthController.php',
+        'App\\Http\\Controllers\\Admin\\CategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CategoryController.php',
+        'App\\Http\\Controllers\\Admin\\CommentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CommentController.php',
+        'App\\Http\\Controllers\\Admin\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DashboardController.php',
+        'App\\Http\\Controllers\\Admin\\GalleryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/GalleryController.php',
+        'App\\Http\\Controllers\\Admin\\PageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PageController.php',
+        'App\\Http\\Controllers\\Admin\\PostController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PostController.php',
+        'App\\Http\\Controllers\\Admin\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProfileController.php',
+        'App\\Http\\Controllers\\Admin\\RoleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RoleController.php',
+        'App\\Http\\Controllers\\Admin\\SettingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SettingController.php',
+        'App\\Http\\Controllers\\Admin\\SliderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SliderController.php',
+        'App\\Http\\Controllers\\Admin\\TagController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/TagController.php',
+        'App\\Http\\Controllers\\Admin\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserController.php',
+        'App\\Http\\Controllers\\BlogController' => __DIR__ . '/../..' . '/app/Http/Controllers/BlogController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\UserDashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserDashboardController.php',
+        'App\\Http\\Middleware\\AdminMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminMiddleware.php',
+        'App\\Http\\Middleware\\CheckAnyPermission' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckAnyPermission.php',
+        'App\\Http\\Middleware\\CheckPermission' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckPermission.php',
+        'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
+        'App\\Models\\Comment' => __DIR__ . '/../..' . '/app/Models/Comment.php',
+        'App\\Models\\Gallery' => __DIR__ . '/../..' . '/app/Models/Gallery.php',
+        'App\\Models\\Page' => __DIR__ . '/../..' . '/app/Models/Page.php',
+        'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
+        'App\\Models\\Post' => __DIR__ . '/../..' . '/app/Models/Post.php',
+        'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
+        'App\\Models\\Setting' => __DIR__ . '/../..' . '/app/Models/Setting.php',
+        'App\\Models\\Slider' => __DIR__ . '/../..' . '/app/Models/Slider.php',
+        'App\\Models\\Tag' => __DIR__ . '/../..' . '/app/Models/Tag.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
@@ -653,7 +683,13 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
+        'Database\\Seeders\\BlogPostsSeeder' => __DIR__ . '/../..' . '/database/seeders/BlogPostsSeeder.php',
+        'Database\\Seeders\\CategorySeeder' => __DIR__ . '/../..' . '/database/seeders/CategorySeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\RolesAndPermissionsSeeder' => __DIR__ . '/../..' . '/database/seeders/RolesAndPermissionsSeeder.php',
+        'Database\\Seeders\\SampleDataSeeder' => __DIR__ . '/../..' . '/database/seeders/SampleDataSeeder.php',
+        'Database\\Seeders\\UpdateCommentsStatusSeeder' => __DIR__ . '/../..' . '/database/seeders/UpdateCommentsStatusSeeder.php',
+        'Database\\Seeders\\VisionSphereContentSeeder' => __DIR__ . '/../..' . '/database/seeders/VisionSphereContentSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',

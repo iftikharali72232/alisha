@@ -22,7 +22,10 @@
                 <a href="{{ route('blog.category', $category->slug) }}" class="flex items-center justify-between text-gray-600 hover:text-rose-600 transition">
                     <div class="flex items-center space-x-3">
                         @if($category->image)
-                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-8 h-8 rounded-lg object-cover">
+                        @php
+                            $categoryImageUrl = Str::startsWith($category->image, 'http') ? $category->image : Storage::url($category->image);
+                        @endphp
+                        <img src="{{ $categoryImageUrl }}" alt="{{ $category->name }}" class="w-8 h-8 rounded-lg object-cover">
                         @else
                         <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
                             <i class="fas fa-folder text-rose-600 text-sm"></i>
@@ -46,7 +49,10 @@
             <article class="flex space-x-4">
                 <a href="{{ route('blog.show', $post->slug) }}" class="flex-shrink-0">
                     @if($post->featured_image)
-                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-16 h-16 rounded-lg object-cover">
+                    @php
+                        $sidebarImageUrl = Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image);
+                    @endphp
+                    <img src="{{ $sidebarImageUrl }}" alt="{{ $post->title }}" class="w-16 h-16 rounded-lg object-cover">
                     @else
                     <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-rose-400 to-purple-500"></div>
                     @endif

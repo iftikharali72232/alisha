@@ -34,10 +34,10 @@
     @forelse($galleries as $gallery)
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group">
         <div class="relative aspect-square">
-            <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" class="w-full h-full object-cover">
+            <img src="{{ Str::startsWith($gallery->image, 'http') ? $gallery->image : Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <div class="flex items-center space-x-2">
-                    <button type="button" class="p-2 bg-white text-gray-700 rounded-full hover:bg-gray-100 transition" onclick="showPreview('{{ Storage::url($gallery->image) }}', '{{ $gallery->title }}')">
+                    <button type="button" class="p-2 bg-white text-gray-700 rounded-full hover:bg-gray-100 transition" onclick="showPreview('{{ Str::startsWith($gallery->image, 'http') ? $gallery->image : Storage::url($gallery->image) }}', '{{ $gallery->title }}')">
                         <i class="fas fa-expand"></i>
                     </button>
                     <a href="{{ route('admin.galleries.edit', $gallery) }}" class="p-2 bg-white text-blue-600 rounded-full hover:bg-blue-50 transition">

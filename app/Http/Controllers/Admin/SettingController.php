@@ -11,14 +11,15 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $settings = Setting::all()->pluck('value', 'key')->toArray();
-        return view('admin.settings.index', compact('settings'));
+        $settings = Setting::all()->groupBy('group');
+        $settingsArray = Setting::all()->pluck('value', 'key')->toArray();
+        return view('admin.settings.index', compact('settings', 'settingsArray'));
     }
 
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'site_name' => 'required|string|max:255',
+            'site_name' => 'nullable|string|max:255',
             'site_tagline' => 'nullable|string|max:255',
             'site_description' => 'nullable|string|max:1000',
             'contact_email' => 'nullable|email|max:255',
@@ -27,40 +28,47 @@ class SettingController extends Controller
             'facebook_url' => 'nullable|url|max:255',
             'twitter_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
+            'linkedin_url' => 'nullable|url|max:255',
             'youtube_url' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|max:2048',
-            'favicon' => 'nullable|image|max:1024',
+            'site_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'site_favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,ico|max:2048',
             'footer_text' => 'nullable|string|max:500',
+            'footer_about' => 'nullable|string|max:1000',
             'google_analytics' => 'nullable|string|max:100',
             'posts_per_page' => 'nullable|integer|min:1|max:50',
         ]);
 
         foreach ($validated as $key => $value) {
-            if ($key === 'logo' || $key === 'favicon') {
+            if ($key === 'site_logo' || $key === 'site_favicon') {
                 continue;
             }
-            Setting::set($key, $value);
+            if ($value !== null) {
+                Setting::set($key, $value);
+            }
         }
 
         // Handle logo upload
-        if ($request->hasFile('logo')) {
-            $oldLogo = Setting::get('logo');
+        if ($request->hasFile('site_logo')) {
+            $oldLogo = Setting::get('site_logo');
             if ($oldLogo) {
                 Storage::disk('public')->delete($oldLogo);
             }
-            $logoPath = $request->file('logo')->store('settings', 'public');
-            Setting::set('logo', $logoPath);
+            $logoPath = $request->file('site_logo')->store('settings', 'public');
+            Setting::set('site_logo', $logoPath, 'image', 'general', 'Site Logo');
         }
 
         // Handle favicon upload
-        if ($request->hasFile('favicon')) {
-            $oldFavicon = Setting::get('favicon');
+        if ($request->hasFile('site_favicon')) {
+            $oldFavicon = Setting::get('site_favicon');
             if ($oldFavicon) {
                 Storage::disk('public')->delete($oldFavicon);
             }
-            $faviconPath = $request->file('favicon')->store('settings', 'public');
-            Setting::set('favicon', $faviconPath);
+            $faviconPath = $request->file('site_favicon')->store('settings', 'public');
+            Setting::set('site_favicon', $faviconPath, 'image', 'general', 'Site Favicon');
         }
+
+        // Clear settings cache
+        Setting::clearCache();
 
         return redirect()->back()->with('success', 'Settings updated successfully!');
     }

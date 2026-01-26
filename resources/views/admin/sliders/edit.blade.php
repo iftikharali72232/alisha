@@ -40,7 +40,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
-                    <img src="{{ Storage::url($slider->image) }}" alt="{{ $slider->title }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <img src="{{ Str::startsWith($slider->image, 'http') ? $slider->image : Storage::url($slider->image) }}" alt="{{ $slider->title }}" class="w-full h-48 object-cover rounded-lg mb-4">
                 </div>
                 
                 <div>

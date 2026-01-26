@@ -21,7 +21,7 @@
     @forelse($sliders as $slider)
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group">
         <div class="relative aspect-video">
-            <img src="{{ Storage::url($slider->image) }}" alt="{{ $slider->title }}" class="w-full h-full object-cover">
+            <img src="{{ Str::startsWith($slider->image, 'http') ? $slider->image : Storage::url($slider->image) }}" alt="{{ $slider->title }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <div class="flex items-center space-x-2">
                     <form action="{{ route('admin.sliders.toggle-active', $slider) }}" method="POST" class="inline">

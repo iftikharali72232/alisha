@@ -23,7 +23,8 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'avatar_preset' => 'nullable|integer|min:0|max:7',
             'bio' => 'nullable|string|max:500',
             'phone' => 'nullable|string|max:20',
             'website' => 'nullable|url|max:255',
@@ -39,6 +40,12 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete($user->avatar);
             }
             $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        } elseif ($request->has('avatar_preset') && $request->avatar_preset !== null) {
+            // Handle preset avatar - store as a special value
+            if ($user->avatar && !str_starts_with($user->avatar, 'preset:')) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $data['avatar'] = 'preset:' . $request->avatar_preset;
         }
 
         $user->update($data);

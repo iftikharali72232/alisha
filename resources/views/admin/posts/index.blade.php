@@ -70,5 +70,12 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination -->
+        @if($posts->hasPages())
+            <div class="px-6 py-4 border-t border-gray-200">
+                {{ $posts->links() }}
+            </div>
+        @endif
     </div>
 @endsection

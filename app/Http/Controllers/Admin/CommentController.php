@@ -10,7 +10,7 @@ class CommentController extends Controller
 {
     public function index()
     {
-        $comments = Comment::with(['post', 'user'])
+        $comments = Comment::with(['post', 'user', 'parent', 'replies'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
         return view('admin.comments.index', compact('comments'));
@@ -18,6 +18,7 @@ class CommentController extends Controller
 
     public function show(Comment $comment)
     {
+        $comment->load(['post', 'user', 'parent', 'allReplies']);
         return view('admin.comments.show', compact('comment'));
     }
 
@@ -57,5 +58,28 @@ class CommentController extends Controller
             'approved' => false
         ]);
         return back()->with('success', 'Comment marked as spam.');
+    }
+
+    /**
+     * Reply to a comment from admin panel
+     */
+    public function reply(Request $request, Comment $comment)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        Comment::create([
+            'post_id' => $comment->post_id,
+            'parent_id' => $comment->id,
+            'user_id' => auth()->id(),
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'content' => $validated['content'],
+            'approved' => true,
+            'status' => 'approved',
+        ]);
+
+        return back()->with('success', 'Reply posted successfully.');
     }
 }

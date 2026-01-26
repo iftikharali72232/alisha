@@ -119,17 +119,51 @@
     </form>
 </div>
 
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+@section('scripts')
 <script>
-    tinymce.init({
-        selector: '.tinymce',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        height: 400,
-        menubar: false,
-        skin: 'oxide',
-        content_css: 'default'
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init({
+            selector: '.tinymce',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount paste',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            height: 400,
+            menubar: false,
+            skin: 'oxide',
+            content_css: 'default',
+            paste_data_images: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                let xhr, formData;
+
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/admin/upload-image');
+
+                xhr.onload = function() {
+                    let json;
+
+                    if (xhr.status != 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+
+                    json = JSON.parse(xhr.responseText);
+
+                    if (!json || typeof json.location != 'string') {
+                        failure('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+
+                    success(json.location);
+                };
+
+                formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                xhr.send(formData);
+            }
+        });
     });
 </script>
+@endsection
 @endsection

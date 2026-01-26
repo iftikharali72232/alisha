@@ -46,8 +46,8 @@ class PostController extends Controller
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
             'status' => 'sometimes|in:draft,published',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
 
         // Handle featured image upload
@@ -132,8 +132,8 @@ class PostController extends Controller
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
             'status' => 'sometimes|in:draft,published',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
 
         $updateData = [
@@ -234,5 +234,24 @@ class PostController extends Controller
         
         $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
+    }
+
+    /**
+     * Upload image for TinyMCE editor
+     */
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+        ]);
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('posts/content', 'public');
+            $url = '/storage/' . $path;
+
+            return response()->json(['location' => $url]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
 }

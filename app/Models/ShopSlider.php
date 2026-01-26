@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ShopSlider extends Model
+{
+    protected $fillable = [
+        'shop_id',
+        'title',
+        'description',
+        'image',
+        'button_text',
+        'button_link',
+        'order',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image) {
+            if (str_starts_with($this->image, 'http')) {
+                return $this->image;
+            }
+            return \Storage::url($this->image);
+        }
+        return asset('images/placeholder-slider.png');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order');
+    }
+}

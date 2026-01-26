@@ -40,7 +40,7 @@
                     <td class="px-6 py-4">
                         <div class="flex items-center">
                             @if($page->featured_image)
-                            <img src="{{ Storage::url($page->featured_image) }}" alt="{{ $page->title }}" class="w-10 h-10 rounded object-cover mr-3">
+                            <img src="{{ Str::startsWith($page->featured_image, 'http') ? $page->featured_image : Storage::url($page->featured_image) }}" alt="{{ $page->title }}" class="w-10 h-10 rounded object-cover mr-3">
                             @else
                             <div class="w-10 h-10 rounded bg-gray-200 flex items-center justify-center mr-3">
                                 <i class="fas fa-file-alt text-gray-400"></i>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f43f5e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sphere Icon -->
+  <g transform="translate(5, 5)">
+    <!-- Outer ring -->
+    <circle cx="25" cy="25" r="23" fill="none" stroke="url(#sphereGradient)" stroke-width="2"/>
+    <!-- Inner sphere -->
+    <circle cx="25" cy="25" r="18" fill="url(#logoGradient)" opacity="0.9"/>
+    <!-- Eye/Vision element -->
+    <ellipse cx="25" cy="25" rx="12" ry="8" fill="white" opacity="0.9"/>
+    <circle cx="25" cy="25" r="5" fill="#1f2937"/>
+    <circle cx="27" cy="23" r="2" fill="white" opacity="0.8"/>
+    <!-- Orbit lines -->
+    <ellipse cx="25" cy="25" rx="20" ry="8" fill="none" stroke="url(#sphereGradient)" stroke-width="1.5" transform="rotate(-30, 25, 25)" opacity="0.6"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="60" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1f2937">Vision</text>
+  <text x="60" y="48" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="url(#logoGradient)">Sphere</text>
+</svg>

@@ -40,7 +40,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
-                    <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover rounded-lg">
+                    <img src="{{ Str::startsWith($gallery->image, 'http') ? $gallery->image : Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover rounded-lg">
                 </div>
                 
                 <div>

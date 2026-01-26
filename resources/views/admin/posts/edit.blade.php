@@ -76,7 +76,7 @@
                     <div class="grid grid-cols-4 gap-4" id="existingGallery">
                         @foreach($post->gallery_images as $image)
                         <div class="relative group" id="gallery-{{ $loop->index }}">
-                            <img src="{{ Storage::url($image) }}" class="w-full h-24 object-cover rounded-lg">
+                            <img src="{{ Str::startsWith($image, 'http') ? $image : Storage::url($image) }}" class="w-full h-24 object-cover rounded-lg">
                             <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
                                 <label class="cursor-pointer">
                                     <input type="checkbox" name="remove_gallery_images[]" value="{{ $image }}" class="sr-only">
@@ -221,7 +221,7 @@
                 @if($post->featured_image)
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                    <img src="{{ Storage::url($post->featured_image) }}" class="w-full h-40 object-cover rounded-lg">
+                    <img src="{{ Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image) }}" class="w-full h-40 object-cover rounded-lg">
                 </div>
                 @endif
                 
@@ -240,65 +240,140 @@
         </div>
     </div>
 </form>
+@endsection
 
-<!-- TinyMCE Script -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+@section('scripts')
 <script>
-    tinymce.init({
-        selector: '.tinymce-editor',
-        height: 500,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-        ],
-        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media | code fullscreen | help',
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
-        menubar: true,
-        branding: false,
-        promotion: false,
-        setup: function(editor) {
-            editor.on('change', function() {
-                editor.save();
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init({
+            selector: '.tinymce-editor',
+            height: 500,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'paste'
+            ],
+            toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media | code fullscreen | help',
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
+            menubar: true,
+            branding: false,
+            promotion: false,
+            paste_data_images: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                let xhr, formData;
+
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/admin/upload-image');
+
+                xhr.onload = function() {
+                    let json;
+
+                    if (xhr.status != 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+
+                    json = JSON.parse(xhr.responseText);
+
+                    if (!json || typeof json.location != 'string') {
+                        failure('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+
+                    success(json.location);
+                };
+
+                formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                xhr.send(formData);
+            },
+            setup: function(editor) {
+                editor.on('change', function() {
+                    editor.save();
+                });
+            }
+        });
+
+        const featuredInput = document.getElementById('featured_image');
+        const galleryInput = document.getElementById('gallery_images');
+        const galleryPreview = document.getElementById('galleryPreview');
+        const galleryDropzone = document.getElementById('galleryDropzone');
+
+        const renderGalleryPreviews = (files) => {
+            if (!galleryPreview) return;
+            galleryPreview.innerHTML = '';
+
+            Array.from(files).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const div = document.createElement('div');
+                    div.className = 'relative group';
+                    div.innerHTML = `
+                        <img src="${event.target.result}" class="w-full h-24 object-cover rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
+                            <span class="text-white text-xs">${file.name.substring(0, 15)}...</span>
+                        </div>
+                    `;
+                    galleryPreview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        if (featuredInput) {
+            featuredInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const container = document.getElementById('featuredPreviewContainer');
+                    if (!container) return;
+                    container.innerHTML = `
+                        <img src="${event.target.result}" class="w-full h-40 object-cover rounded-lg">
+                        <p class="text-sm text-gray-600 mt-2">${file.name}</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
             });
         }
-    });
 
-    // Featured Image Preview
-    document.getElementById('featured_image').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('featuredPreviewContainer').innerHTML = `
-                    <img src="${e.target.result}" class="w-full h-40 object-cover rounded-lg">
-                    <p class="text-sm text-gray-600 mt-2">${file.name}</p>
-                `;
-            };
-            reader.readAsDataURL(file);
+        if (galleryInput) {
+            galleryInput.addEventListener('change', function(e) {
+                renderGalleryPreviews(e.target.files);
+            });
         }
-    });
 
-    // Gallery Images Preview
-    document.getElementById('gallery_images').addEventListener('change', function(e) {
-        const preview = document.getElementById('galleryPreview');
-        preview.innerHTML = '';
-        
-        Array.from(e.target.files).forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.className = 'relative group';
-                div.innerHTML = `
-                    <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
-                        <span class="text-white text-xs">${file.name.substring(0, 15)}...</span>
-                    </div>
-                `;
-                preview.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
+        const preventDefaults = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        if (galleryDropzone) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+                galleryDropzone.addEventListener(eventName, preventDefaults);
+            });
+
+            ['dragenter', 'dragover'].forEach((eventName) => {
+                galleryDropzone.addEventListener(eventName, () => galleryDropzone.classList.add('border-rose-400', 'bg-rose-50'));
+            });
+
+            ['dragleave', 'drop'].forEach((eventName) => {
+                galleryDropzone.addEventListener(eventName, () => galleryDropzone.classList.remove('border-rose-400', 'bg-rose-50'));
+            });
+
+            galleryDropzone.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt?.files;
+                if (files && galleryInput) {
+                    galleryInput.files = files;
+                    galleryInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
     });
 </script>
 @endsection

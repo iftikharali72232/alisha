@@ -25,7 +25,7 @@
             <!-- Logo/Brand -->
             <div class="flex items-center justify-between p-6 border-b border-rose-200">
                 <div class="flex items-center space-x-4">
-                    <img src="{{ asset('images/logo.png') }}" alt="VisionSphere Logo" class="w-14 h-14 rounded-lg object-cover shadow-sm">
+                    <img src="{{ asset('images/logo.svg?v=' . time()) }}" alt="VisionSphere Logo" class="w-14 h-14 rounded-lg shadow-sm" style="width: 56px; height: 56px;">
                     <div>
                         <h2 class="text-xl font-bold text-gray-800">VisionSphere – Explore your world of ideas and stories.</h2>
                         <p class="text-xs text-gray-500">For women, by women</p>
@@ -38,23 +38,57 @@
 
             <!-- Navigation -->
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ route('user.dashboard') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 bg-rose-100 text-rose-800 border-r-4 border-rose-500">
+                <a href="{{ route('user.dashboard') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.dashboard') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-tachometer-alt mr-3 text-lg"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
-                <a href="{{ route('admin.posts.index') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300">
+                
+                <!-- My Shop Section -->
+                <div class="pt-4 pb-2">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">My Shop</span>
+                </div>
+                @php
+                    $userShop = auth()->user()->shop;
+                @endphp
+                @if($userShop)
+                    <a href="{{ route('user.shop.dashboard') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.shop.*') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
+                        <i class="fas fa-store mr-3 text-lg"></i>
+                        <span class="font-medium">{{ Str::limit($userShop->name, 15) }}</span>
+                        @if($userShop->subscription_status === 'trial')
+                            <span class="ml-auto text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Trial</span>
+                        @elseif($userShop->subscription_status === 'active')
+                            <span class="ml-auto text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Pro</span>
+                        @endif
+                    </a>
+                @else
+                    <a href="{{ route('user.shop.create') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300">
+                        <i class="fas fa-plus-circle mr-3 text-lg"></i>
+                        <span class="font-medium">Create Shop</span>
+                    </a>
+                @endif
+                
+                <!-- Content Section -->
+                <div class="pt-4 pb-2">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">Content</span>
+                </div>
+                <a href="{{ route('admin.posts.index') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('admin.posts.index') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-newspaper mr-3 text-lg"></i>
                     <span class="font-medium">My Posts</span>
                 </a>
-                <a href="{{ route('admin.posts.create') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300">
+                <a href="{{ route('admin.posts.create') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('admin.posts.create') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-plus mr-3 text-lg"></i>
                     <span class="font-medium">Create Post</span>
                 </a>
-                <a href="#" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300">
+                
+                <!-- Account Section -->
+                <div class="pt-4 pb-2">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">Account</span>
+                </div>
+                <a href="{{ route('user.profile') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.profile*') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-user mr-3 text-lg"></i>
                     <span class="font-medium">Profile</span>
                 </a>
-                <a href="#" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300">
+                <a href="{{ route('user.settings') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.settings*') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-cog mr-3 text-lg"></i>
                     <span class="font-medium">Settings</span>
                 </a>
@@ -324,8 +358,8 @@
         </div>
     </div>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome (CSS) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" referrerpolicy="no-referrer">
 
     <script>
         function toggleMobileMenu() {
