@@ -18,7 +18,7 @@ class PostController extends Controller
     {
         $query = Post::with('category', 'user');
         
-        if (!auth()->user()->is_admin) {
+        if (!auth()->user()->hasPermission('view-posts')) {
             $query->where('user_id', auth()->id());
         }
         

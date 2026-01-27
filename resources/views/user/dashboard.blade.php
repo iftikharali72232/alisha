@@ -20,7 +20,7 @@
         <div id="mobile-menu-overlay" class="mobile-menu-overlay fixed inset-0 z-40 bg-black bg-opacity-50 hidden lg:hidden" onclick="toggleMobileMenu()"></div>
 
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar-transition fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform lg:transform-none lg:opacity-100 lg:static lg:z-auto overflow-y-auto">
+        <div id="sidebar" class="sidebar-transition fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform -translate-x-full lg:translate-x-0 lg:transform-none lg:opacity-100 lg:static lg:z-auto overflow-y-auto">
             <div class="flex flex-col h-full">
             <!-- Logo/Brand -->
             <div class="flex items-center justify-between p-6 border-b border-rose-200">
@@ -71,11 +71,11 @@
                 <div class="pt-4 pb-2">
                     <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">Content</span>
                 </div>
-                <a href="{{ route('admin.posts.index') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('admin.posts.index') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
+                <a href="{{ route('user.posts.index') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.posts.*') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-newspaper mr-3 text-lg"></i>
                     <span class="font-medium">My Posts</span>
                 </a>
-                <a href="{{ route('admin.posts.create') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('admin.posts.create') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
+                <a href="{{ route('user.posts.create') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->routeIs('user.posts.create') ? 'bg-rose-100 text-rose-800 border-r-4 border-rose-500' : '' }}">
                     <i class="fas fa-plus mr-3 text-lg"></i>
                     <span class="font-medium">Create Post</span>
                 </a>
@@ -139,7 +139,7 @@
                             <div id="profile-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 hidden">
                                 <div class="py-1">
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50">Profile Settings</a>
-                                    <form method="POST" action="{{ route('admin.logout') }}">
+                                    <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50">Logout</button>
                                     </form>
@@ -241,7 +241,7 @@
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">My Recent Posts</h3>
-                        <a href="{{ route('admin.posts.index') }}" class="text-green-600 hover:text-green-800 text-sm font-medium">View all</a>
+                        <a href="{{ route('user.posts.index') }}" class="text-green-600 hover:text-green-800 text-sm font-medium">View all</a>
                     </div>
                     @if($recentPosts->count() > 0)
                         <div class="space-y-4">
@@ -284,7 +284,7 @@
                             @endforeach
                         </div>
                         <div class="mt-6 text-center">
-                            <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                            <a href="{{ route('user.posts.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200">
                                 <i class="fas fa-list mr-2"></i>View All Posts
                             </a>
                         </div>
@@ -317,7 +317,7 @@
                                     <p class="text-xs text-rose-600">Start creating content</p>
                                 </div>
                             </a>
-                            <a href="{{ route('admin.posts.index') }}" class="flex items-center w-full px-4 py-3 min-h-[48px] bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition-colors duration-200 group">
+                            <a href="{{ route('user.posts.index') }}" class="flex items-center w-full px-4 py-3 min-h-[48px] bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition-colors duration-200 group">
                                 <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-pink-200 transition-colors duration-200">
                                     <i class="fas fa-list text-pink-600"></i>
                                 </div>
@@ -393,11 +393,7 @@
             }
         });
 
-        // Initialize mobile sidebar
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.add('-translate-x-full', 'lg:translate-x-0');
-        });
+        // Sidebar is hidden on mobile by default via CSS classes.
     </script>
 </body>
 </html>

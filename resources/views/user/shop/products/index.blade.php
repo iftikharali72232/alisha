@@ -55,18 +55,21 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($products as $product)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     @if($product->featured_image)
                                         <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}" class="w-12 h-12 rounded object-cover">
@@ -81,16 +84,16 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <span class="text-sm text-gray-600">{{ $product->category?->name ?? 'Uncategorized' }}</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">Rs. {{ number_format($product->price) }}</div>
                                 @if($product->compare_price)
                                     <div class="text-xs text-gray-500 line-through">Rs. {{ number_format($product->compare_price) }}</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 @if($product->track_quantity)
                                     <span class="text-sm {{ $product->quantity <= $product->low_stock_threshold ? 'text-red-600 font-medium' : 'text-gray-600' }}">
                                         {{ $product->quantity }}
@@ -99,7 +102,7 @@
                                     <span class="text-sm text-gray-400">Not tracked</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <form action="{{ route('user.shop.products.toggle-status', $product) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="px-2 py-1 text-xs rounded-full {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -107,18 +110,27 @@
                                     </button>
                                 </form>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('user.shop.products.edit', $product) }}" class="text-blue-600 hover:text-blue-900 mr-3">
-                                    <i class="fas fa-edit"></i>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-600">{{ number_format($product->view_count ?? 0) }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-600">{{ $product->orderItems->count() }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-600">{{ $product->created_at->format('M d, Y') }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                <a href="{{ route('user.shop.products.show', $product) }}" class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors duration-200">
+                                    <i class="fas fa-eye mr-1"></i>View
                                 </a>
-                                <a href="{{ route('user.shop.products.show', $product) }}" class="text-gray-600 hover:text-gray-900 mr-3">
-                                    <i class="fas fa-eye"></i>
+                                <a href="{{ route('user.shop.products.edit', $product) }}" class="inline-flex items-center px-3 py-1 text-xs font-medium text-rose-700 bg-rose-100 rounded-lg hover:bg-rose-200 transition-colors duration-200">
+                                    <i class="fas fa-edit mr-1"></i>Edit
                                 </a>
                                 <form action="{{ route('user.shop.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">
-                                        <i class="fas fa-trash"></i>
+                                    <button type="submit" class="inline-flex items-center px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors duration-200">
+                                        <i class="fas fa-trash mr-1"></i>Delete
                                     </button>
                                 </form>
                             </td>

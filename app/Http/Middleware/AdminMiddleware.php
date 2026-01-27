@@ -19,7 +19,10 @@ class AdminMiddleware
             return redirect('/admin/login');
         }
 
-        if (!auth()->user()->is_admin || auth()->user()->status != 1) {
+        $user = auth()->user();
+
+        // Check if user has admin access through is_admin flag or role-based permissions
+        if (!$user->canAccessAdmin() || $user->status != 1) {
             abort(403, 'Access denied. Admin privileges required.');
         }
 

@@ -62,6 +62,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
     Route::put('/user/settings', [UserDashboardController::class, 'updateSettings'])->name('user.settings.update');
     Route::put('/user/password', [UserDashboardController::class, 'updatePassword'])->name('user.password.update');
+
+    // TinyMCE image upload (User)
+    Route::post('/user/upload-image', [UserDashboardController::class, 'uploadImage'])->name('user.upload-image');
+    
+    // User Post Management Routes
+    Route::get('/user/posts', [UserDashboardController::class, 'posts'])->name('user.posts.index');
+    Route::get('/user/posts/create', [UserDashboardController::class, 'createPost'])->name('user.posts.create');
+    Route::post('/user/posts', [UserDashboardController::class, 'storePost'])->name('user.posts.store');
+    Route::get('/user/posts/{post}', [UserDashboardController::class, 'showPost'])->name('user.posts.show');
+    Route::get('/user/posts/{post}/edit', [UserDashboardController::class, 'editPost'])->name('user.posts.edit');
+    Route::put('/user/posts/{post}', [UserDashboardController::class, 'updatePost'])->name('user.posts.update');
+    Route::delete('/user/posts/{post}', [UserDashboardController::class, 'destroyPost'])->name('user.posts.destroy');
+    Route::patch('/user/posts/{post}/toggle-status', [UserDashboardController::class, 'togglePostStatus'])->name('user.posts.toggle-status');
     
     // User Shop Management Routes
     Route::prefix('user/shop')->name('user.shop.')->group(function () {

@@ -18,15 +18,6 @@
         .sidebar-link:hover:not(.active) {
             background-color: rgba(236, 72, 153, 0.1);
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-        }
     </style>
     
     @stack('styles')
@@ -34,7 +25,7 @@
 <body class="bg-gray-100">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar fixed md:static w-64 h-full bg-white shadow-lg z-50">
+        <aside id="sidebar" class="w-64 h-full bg-white shadow-lg">
             <div class="h-full flex flex-col">
                 <!-- Shop Info -->
                 <div class="p-4 border-b bg-gradient-to-r from-pink-500 to-pink-600">
@@ -191,17 +182,11 @@
             </div>
         </aside>
 
-        <!-- Overlay for mobile -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
-
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
             <!-- Top Bar -->
             <header class="bg-white shadow-sm sticky top-0 z-30">
                 <div class="flex items-center justify-between px-4 py-3">
-                    <button class="md:hidden text-gray-600" onclick="toggleSidebar()">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
                     
                     <div class="flex-1 px-4">
                         <h1 class="text-lg font-semibold text-gray-800">@yield('page-title', 'Shop Management')</h1>
@@ -265,20 +250,14 @@
     </div>
 
     <script>
+        // Sidebar is now always visible
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('hidden');
+            // No longer needed since sidebar is always visible
         }
 
-        // Close sidebar when clicking a link on mobile
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 768) {
-                    toggleSidebar();
-                }
-            });
+        // Keep sidebar state sane on resize - no longer needed
+        window.addEventListener('resize', () => {
+            // No longer needed
         });
     </script>
 

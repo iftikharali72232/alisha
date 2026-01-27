@@ -27,7 +27,7 @@ class ShopProductController extends Controller
             return redirect()->route('user.shop.create');
         }
 
-        $query = $shop->products()->with(['category', 'brand', 'activeOffer']);
+        $query = $shop->products()->with(['category', 'brand']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -41,7 +41,7 @@ class ShopProductController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
+            $query->where('is_active', $request->status === '1');
         }
 
         $products = $query->latest()->paginate(15);
@@ -145,7 +145,7 @@ class ShopProductController extends Controller
             abort(404);
         }
 
-        $product->load(['category', 'brand', 'variants', 'reviews', 'activeOffer']);
+        $product->load(['category', 'brand', 'variants', 'reviews']);
 
         return view('user.shop.products.show', compact('shop', 'product'));
     }

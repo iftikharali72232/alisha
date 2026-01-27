@@ -37,7 +37,14 @@ class ShopCustomerController extends Controller
 
         $customers = $query->latest()->paginate(15);
 
-        return view('user.shop.customers.index', compact('shop', 'customers'));
+        $stats = [
+            'total' => $shop->customers()->count(),
+            'new_this_month' => $shop->customers()->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'with_orders' => $shop->customers()->whereHas('orders')->count(),
+            'total_points' => $shop->customers()->sum('loyalty_points'),
+        ];
+
+        return view('user.shop.customers.index', compact('shop', 'customers', 'stats'));
     }
 
     public function show(ShopCustomer $customer)

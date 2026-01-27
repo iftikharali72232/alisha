@@ -29,7 +29,7 @@ class ShopCategoryController extends Controller
             ->withCount('products')
             ->orderBy('order')
             ->orderBy('name')
-            ->get();
+            ->paginate(15);
 
         return view('user.shop.categories.index', compact('shop', 'categories'));
     }

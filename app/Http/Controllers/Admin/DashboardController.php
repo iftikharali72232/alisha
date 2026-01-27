@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        if ($user->is_admin) {
+        if ($user->canAccessAdmin()) {
             // Admin stats
             $stats = [
                 'total_posts' => Post::count(),

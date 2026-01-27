@@ -218,6 +218,8 @@ class DemoShopsSeeder extends Seeder
                 ['user_id' => $user->id],
                 array_merge($data['shop'], [
                     'slug' => Str::slug($data['shop']['name']),
+                    'logo' => 'https://picsum.photos/200/200?random=' . rand(1, 1000),
+                    'banner' => 'https://picsum.photos/1200/400?random=' . rand(1, 1000),
                     'status' => 'active',
                     'subscription_status' => $data['subscription_type'] === 'trial' ? 'trial' : 'active',
                     'trial_ends_at' => $data['subscription_type'] === 'trial' ? Carbon::now()->addDays(30) : null,
@@ -266,6 +268,12 @@ class DemoShopsSeeder extends Seeder
                             'sku' => strtoupper(substr($categoryName, 0, 3)) . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                             'short_description' => 'High quality ' . strtolower($productName) . ' available at best prices.',
                             'description' => 'Premium quality ' . strtolower($productName) . ' crafted with care. Perfect for everyday use. This product comes with a quality guarantee.',
+                            'featured_image' => 'https://picsum.photos/400/400?random=' . rand(1, 1000),
+                            'gallery_images' => json_encode([
+                                'https://picsum.photos/400/400?random=' . rand(1001, 2000),
+                                'https://picsum.photos/400/400?random=' . rand(2001, 3000),
+                                'https://picsum.photos/400/400?random=' . rand(3001, 4000),
+                            ]),
                             'price' => $price,
                             'compare_price' => $price * 1.2,
                             'quantity' => rand(10, 100),

@@ -88,7 +88,7 @@
                     Publish
                 </h3>
                 
-                @if(auth()->user()->is_admin)
+                @if(auth()->user()->hasPermission('publish-posts'))
                 <div class="mb-4">
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                     <select name="status" id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">

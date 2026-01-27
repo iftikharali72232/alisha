@@ -62,7 +62,7 @@
                     </form>
                     
                     @auth
-                        <a href="{{ auth()->user()->is_admin ? route('admin.dashboard') : route('user.dashboard') }}" class="text-gray-700 hover:text-rose-600 transition">
+                        <a href="{{ auth()->user()->canAccessAdmin() ? route('admin.dashboard') : route('user.dashboard') }}" class="text-gray-700 hover:text-rose-600 transition">
                             <i class="fas fa-user-circle text-xl"></i>
                         </a>
                     @else

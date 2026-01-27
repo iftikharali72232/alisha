@@ -12,7 +12,7 @@
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    @if(auth()->user()->is_admin)
+    @if(auth()->user()->canAccessAdmin())
         <!-- Admin Stats -->
         <div class="bg-white rounded-xl shadow-sm border border-rose-200 p-6 hover:shadow-md transition-shadow duration-200">
             <div class="flex items-center justify-between">
@@ -183,7 +183,7 @@
                 </div>
                 <span class="text-sm font-medium text-gray-900">Manage Posts</span>
             </a>
-            @if(auth()->user()->is_admin)
+            @if(auth()->user()->canAccessAdmin())
             <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors duration-200 group">
                 <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors duration-200">
                     <i class="fas fa-users text-purple-600 text-xl"></i>
@@ -214,7 +214,7 @@
     </div>
 </div>
 
-@if(auth()->user()->is_admin)
+@if(auth()->user()->canAccessAdmin())
 <!-- Additional Admin Sections -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
     <!-- Pending Comments -->

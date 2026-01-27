@@ -26,8 +26,8 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-900">{{ $user->name }}</h3>
                 <p class="text-gray-600">{{ $user->email }}</p>
-                <span class="inline-flex items-center mt-2 px-3 py-1 rounded-full text-xs font-medium {{ $user->is_admin ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800' }}">
-                    {{ $user->is_admin ? 'Administrator' : 'User' }}
+                <span class="inline-flex items-center mt-2 px-3 py-1 rounded-full text-xs font-medium {{ $user->canAccessAdmin() ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800' }}">
+                    {{ $user->role?->name ?? ($user->canAccessAdmin() ? 'Administrator' : 'User') }}
                 </span>
                 @if($user->bio)
                 <p class="text-sm text-gray-600 mt-4">{{ $user->bio }}</p>

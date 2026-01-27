@@ -16,7 +16,7 @@
 <!-- Stats -->
 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
     <div class="bg-white rounded-lg shadow p-4 text-center">
-        <p class="text-2xl font-bold text-gray-800">{{ $stats['all'] }}</p>
+        <p class="text-2xl font-bold text-gray-800">{{ $stats['total'] }}</p>
         <p class="text-sm text-gray-500">All Orders</p>
     </div>
     <div class="bg-yellow-50 rounded-lg shadow p-4 text-center">
