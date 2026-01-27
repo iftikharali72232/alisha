@@ -58,8 +58,11 @@
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
@@ -94,6 +97,9 @@
                                 @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-600">{{ $product->cost_price ? 'Rs. ' . number_format($product->cost_price) : '-' }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 @if($product->track_quantity)
                                     <span class="text-sm {{ $product->quantity <= $product->low_stock_threshold ? 'text-red-600 font-medium' : 'text-gray-600' }}">
                                         {{ $product->quantity }}
@@ -103,12 +109,24 @@
                                 @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-600">{{ $product->weight ? $product->weight . ' ' . ($product->weight_unit ?? 'kg') : '-' }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <form action="{{ route('user.shop.products.toggle-status', $product) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="px-2 py-1 text-xs rounded-full {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         {{ $product->is_active ? 'Active' : 'Inactive' }}
                                     </button>
                                 </form>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                @if($product->is_featured)
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">
+                                        <i class="fas fa-star mr-1"></i>Featured
+                                    </span>
+                                @else
+                                    <span class="text-sm text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <span class="text-sm text-gray-600">{{ number_format($product->view_count ?? 0) }}</span>

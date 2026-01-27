@@ -27,7 +27,7 @@ class ShopProductController extends Controller
             return redirect()->route('user.shop.create');
         }
 
-        $query = $shop->products()->with(['category', 'brand']);
+        $query = $shop->products()->with(['category', 'brand', 'orderItems']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
