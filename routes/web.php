@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [ShopDashboardController::class, 'store'])->name('store');
         Route::get('/dashboard', [ShopDashboardController::class, 'index'])->name('dashboard');
         Route::get('/subscription', [ShopDashboardController::class, 'subscription'])->name('subscription');
+        Route::post('/subscription/request', [ShopDashboardController::class, 'requestSubscription'])->name('subscription.request');
         
         // Products
         Route::resource('products', ShopProductController::class)->names('products');
@@ -133,6 +134,7 @@ Route::middleware('auth')->group(function () {
         // Loyalty Settings
         Route::get('loyalty', [ShopCustomerController::class, 'loyalty'])->name('loyalty.index');
         Route::put('loyalty', [ShopCustomerController::class, 'updateLoyalty'])->name('loyalty.update');
+        Route::get('loyalty/transactions', [ShopCustomerController::class, 'loyaltyTransactions'])->name('loyalty.transactions');
         
         // Settings (separate controller)
         Route::get('settings', [ShopSettingsController::class, 'index'])->name('settings.index');
@@ -197,6 +199,11 @@ Route::prefix('admin')->group(function () {
         Route::post('shops/{shop}/toggle-status', [AdminShopController::class, 'toggleStatus'])->name('admin.shops.toggle-status');
         Route::get('shops/{shop}/subscription', [AdminShopController::class, 'manageSubscription'])->name('admin.shops.subscription');
         Route::post('shops/{shop}/subscription', [AdminShopController::class, 'updateSubscription'])->name('admin.shops.subscription.update');
+        
+        // Subscription Requests
+        Route::get('subscription-requests', [AdminShopController::class, 'subscriptionRequests'])->name('admin.subscription-requests');
+        Route::post('subscription-requests/{subscription}/approve', [AdminShopController::class, 'approveSubscriptionRequest'])->name('admin.subscription-requests.approve');
+        Route::post('subscription-requests/{subscription}/reject', [AdminShopController::class, 'rejectSubscriptionRequest'])->name('admin.subscription-requests.reject');
         
         // Subscription Plans
         Route::resource('shop-plans', ShopSubscriptionPlanController::class, ['parameters' => ['shop-plans' => 'plan']])->names('admin.shop-plans');

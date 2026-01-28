@@ -192,7 +192,7 @@ class ShopCustomerController extends Controller
         $loyaltySetting = $shop->loyaltySetting;
         
         // Get recent loyalty transactions
-        $transactions = \App\Models\ShopLoyaltyTransaction::whereHas('customer', function ($q) use ($shop) {
+        $recentTransactions = \App\Models\ShopLoyaltyTransaction::whereHas('customer', function ($q) use ($shop) {
             $q->where('shop_id', $shop->id);
         })->with('customer')->latest()->limit(20)->get();
 
@@ -205,7 +205,7 @@ class ShopCustomerController extends Controller
             'customers_with_points' => $shop->customers()->where('loyalty_points', '>', 0)->count(),
         ];
 
-        return view('user.shop.loyalty.index', compact('shop', 'loyaltySetting', 'transactions', 'stats'));
+        return view('user.shop.loyalty.index', compact('shop', 'loyaltySetting', 'recentTransactions', 'stats'));
     }
 
     public function updateLoyalty(Request $request)
@@ -234,5 +234,34 @@ class ShopCustomerController extends Controller
 
         return redirect()->route('user.shop.loyalty.index')
             ->with('success', 'Loyalty settings updated successfully!');
+    }
+
+    public function loyaltyTransactions(Request $request)
+    {
+        $shop = $this->getUserShop();
+
+        if (!$shop) {
+            return redirect()->route('user.shop.create');
+        }
+
+        $query = \App\Models\ShopLoyaltyTransaction::whereHas('customer', function ($q) use ($shop) {
+            $q->where('shop_id', $shop->id);
+        })->with('customer');
+
+        // Filter by type if specified
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        // Filter by customer if specified
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+
+        $transactions = $query->latest()->paginate(50);
+
+        $customers = $shop->customers()->orderBy('name')->get();
+
+        return view('user.shop.loyalty.transactions', compact('shop', 'transactions', 'customers'));
     }
 }

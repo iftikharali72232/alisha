@@ -209,6 +209,12 @@ class Shop extends Model
         return $subscription && $subscription->plan && $subscription->plan->loyalty_enabled;
     }
 
+    public function hasFeature(string $feature): bool
+    {
+        $subscription = $this->activeSubscription;
+        return $subscription && $subscription->plan && $subscription->plan->{$feature};
+    }
+
     public function getRemainingProductSlots(): ?int
     {
         $subscription = $this->activeSubscription;

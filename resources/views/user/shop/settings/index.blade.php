@@ -359,7 +359,7 @@
                     <span class="text-gray-500">{{ url('/shop/') }}/</span>
                     <span class="font-medium text-pink-600">{{ $shop->slug }}</span>
                 </div>
-                <a href="{{ route('shops.show', $shop->slug) }}" target="_blank"
+                <a href="{{ route('shop.show', $shop->slug) }}" target="_blank"
                     class="px-4 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">
                     <i class="fas fa-external-link-alt mr-2"></i>Visit Shop
                 </a>

@@ -120,6 +120,10 @@
                 <i class="fas fa-sliders-h mr-3 text-lg"></i>
                 <span class="font-medium">Shop Settings</span>
             </a>
+            <a href="{{ route('admin.subscription-requests') }}" class="nav-link flex items-center px-4 py-3 min-h-[44px] text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-rose-300 {{ request()->is('admin/subscription-requests*') ? 'bg-rose-100 text-rose-800' : '' }}">
+                <i class="fas fa-clock mr-3 text-lg"></i>
+                <span class="font-medium">Subscription Requests</span>
+            </a>
             @endif
 
             <!-- System -->

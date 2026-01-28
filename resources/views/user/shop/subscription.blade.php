@@ -207,10 +207,14 @@
                                 <span class="font-medium">{{ $sub->plan?->name ?? 'Trial' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $sub->starts_at->format('d M Y') }} - {{ $sub->ends_at->format('d M Y') }}
+                                @if($sub->starts_at && $sub->ends_at)
+                                    {{ $sub->starts_at->format('d M Y') }} - {{ $sub->ends_at->format('d M Y') }}
+                                @else
+                                    Pending Approval
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                Rs. {{ number_format($sub->amount ?? 0) }}
+                                Rs. {{ number_format($sub->amount_paid ?? 0) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 text-xs rounded-full

@@ -296,6 +296,45 @@ class ShopController extends Controller
             ->with('success', $message);
     }
 
+    public function subscriptionRequests()
+    {
+        $requests = ShopSubscription::with(['shop.user', 'plan'])
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.shops.subscription-requests', compact('requests'));
+    }
+
+    public function approveSubscriptionRequest(Request $request, ShopSubscription $subscription)
+    {
+        $validated = $request->validate([
+            'starts_at' => 'required|date|after:today',
+            'ends_at' => 'required|date|after:starts_at',
+            'amount_paid' => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|string|max:50',
+            'transaction_id' => 'nullable|string|max:255',
+        ]);
+
+        $subscription->update([
+            'status' => 'active',
+            'starts_at' => $validated['starts_at'],
+            'ends_at' => $validated['ends_at'],
+            'amount_paid' => $validated['amount_paid'] ?? 0,
+            'payment_method' => $validated['payment_method'],
+            'transaction_id' => $validated['transaction_id'],
+        ]);
+
+        return back()->with('success', 'Subscription request approved successfully!');
+    }
+
+    public function rejectSubscriptionRequest(ShopSubscription $subscription)
+    {
+        $subscription->update(['status' => 'cancelled']);
+
+        return back()->with('success', 'Subscription request rejected!');
+    }
+
     public function toggleStatus(Shop $shop)
     {
         $newStatus = $shop->status === 'active' ? 'inactive' : 'active';

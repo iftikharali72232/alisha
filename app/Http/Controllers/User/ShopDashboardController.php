@@ -191,8 +191,34 @@ class ShopDashboardController extends Controller
 
         $shop->load(['activeSubscription.plan', 'subscriptions.plan']);
         $plans = \App\Models\ShopSubscriptionPlan::active()->ordered()->get();
+        $subscriptionHistory = $shop->subscriptions()->with('plan')->orderBy('created_at', 'desc')->get();
 
-        return view('user.shop.subscription', compact('shop', 'plans'));
+        return view('user.shop.subscription', compact('shop', 'plans', 'subscriptionHistory'));
+    }
+
+    public function requestSubscription(Request $request)
+    {
+        $shop = $this->getUserShop();
+        
+        if (!$shop) {
+            return redirect()->route('user.shop.create');
+        }
+
+        $validated = $request->validate([
+            'plan_id' => 'required|exists:shop_subscription_plans,id',
+        ]);
+
+        $plan = \App\Models\ShopSubscriptionPlan::findOrFail($validated['plan_id']);
+
+        // For now, we'll create a pending subscription request
+        // In a real application, this might integrate with a payment gateway
+        $shop->subscriptions()->create([
+            'plan_id' => $plan->id,
+            'status' => 'pending',
+            'requested_at' => now(),
+        ]);
+
+        return back()->with('success', 'Subscription request submitted successfully! An admin will review your request.');
     }
 
     protected function getUserShop(): ?Shop
