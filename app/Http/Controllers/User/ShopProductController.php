@@ -81,6 +81,12 @@ class ShopProductController extends Controller
             return redirect()->route('user.shop.create');
         }
 
+        // Check plan limits
+        $currentPlan = $shop->activeSubscription?->plan;
+        if ($currentPlan && $shop->products()->count() >= $currentPlan->max_products) {
+            return redirect()->back()->with('error', 'You have reached the maximum number of products allowed by your current plan. Please upgrade your plan to add more products.');
+        }
+
         $validated = $request->validate([
             'category_id' => 'nullable|exists:shop_categories,id',
             'brand_id' => 'nullable|exists:shop_brands,id',

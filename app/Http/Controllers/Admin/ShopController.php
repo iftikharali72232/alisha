@@ -8,6 +8,7 @@ use App\Models\ShopSubscription;
 use App\Models\ShopSubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ShopController extends Controller
@@ -74,6 +75,10 @@ class ShopController extends Controller
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
+
+        // Ensure storage directories exist
+        Storage::disk('public')->makeDirectory('shops/logos');
+        Storage::disk('public')->makeDirectory('shops/banners');
 
         // Handle file uploads
         if ($request->hasFile('logo')) {
@@ -173,19 +178,23 @@ class ShopController extends Controller
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
 
+        // Ensure storage directories exist
+        Storage::disk('public')->makeDirectory('shops/logos');
+        Storage::disk('public')->makeDirectory('shops/banners');
+
         // Handle file uploads
         if ($request->hasFile('logo')) {
             // Delete old logo
-            if ($shop->logo) {
-                \Storage::disk('public')->delete($shop->logo);
+            if ($shop->logo && Storage::disk('public')->exists($shop->logo)) {
+                Storage::disk('public')->delete($shop->logo);
             }
             $validated['logo'] = $request->file('logo')->store('shops/logos', 'public');
         }
 
         if ($request->hasFile('banner')) {
             // Delete old banner
-            if ($shop->banner) {
-                \Storage::disk('public')->delete($shop->banner);
+            if ($shop->banner && Storage::disk('public')->exists($shop->banner)) {
+                Storage::disk('public')->delete($shop->banner);
             }
             $validated['banner'] = $request->file('banner')->store('shops/banners', 'public');
         }

@@ -37,6 +37,12 @@ class ShopSliderController extends Controller
             return redirect()->route('user.shop.create');
         }
 
+        // Check plan limits
+        $currentPlan = $shop->activeSubscription?->plan;
+        if ($currentPlan && $shop->sliders()->count() >= $currentPlan->max_sliders) {
+            return redirect()->back()->with('error', 'You have reached the maximum number of sliders allowed by your current plan. Please upgrade your plan to add more sliders.');
+        }
+
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',

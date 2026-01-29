@@ -288,10 +288,10 @@
                     </div>
 
                     <!-- Loyalty Points -->
-                    @if(session('shop_customer_' . $shop->id) && ($shop->loyaltySettings?->is_enabled ?? false))
+                    @if(session('shop_customer_' . $shop->id) && ($shop->loyaltySetting?->is_enabled ?? false))
                         @php
                             $customer = \App\Models\ShopCustomer::find(session('shop_customer_' . $shop->id)['id']);
-                            $earnablePoints = floor($total / 100) * ($shop->loyaltySettings->points_per_currency ?? 1);
+                            $earnablePoints = floor($total / 100) * ($shop->loyaltySetting->points_per_currency ?? 1);
                         @endphp
                         
                         @if($customer && $customer->loyalty_points > 0)

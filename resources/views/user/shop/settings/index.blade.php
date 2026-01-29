@@ -306,12 +306,23 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Banner Image</label>
-                    <label class="cursor-pointer bg-white px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition inline-flex items-center">
-                        <i class="fas fa-upload mr-2 text-gray-400"></i>
-                        <span class="text-sm text-gray-600">Upload Banner</span>
-                        <input type="file" name="banner" accept="image/*" class="hidden">
-                    </label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
+                    <div class="flex items-center gap-4">
+                        <div id="banner-preview" class="w-32 h-20 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
+                            @if($shop->banner)
+                                <img src="{{ Storage::url($shop->banner) }}" alt="Banner" class="w-full h-full object-cover">
+                            @else
+                                <i class="fas fa-image text-2xl text-gray-400"></i>
+                            @endif
+                        </div>
+                        <div>
+                            <label class="cursor-pointer bg-white px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition inline-block">
+                                <span class="text-sm text-gray-600"><i class="fas fa-upload mr-2"></i>Change Banner</span>
+                                <input type="file" name="banner" accept="image/*" class="hidden" onchange="previewImage(this, 'banner-preview')">
+                            </label>
+                            <p class="text-xs text-gray-500 mt-2">Recommended: 1200x400px, max 2MB</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -64,6 +64,12 @@ class ShopCategoryController extends Controller
             return redirect()->route('user.shop.create');
         }
 
+        // Check plan limits
+        $currentPlan = $shop->activeSubscription?->plan;
+        if ($currentPlan && $shop->categories()->count() >= $currentPlan->max_categories) {
+            return redirect()->back()->with('error', 'You have reached the maximum number of categories allowed by your current plan. Please upgrade your plan to add more categories.');
+        }
+
         $validated = $request->validate([
             'parent_id' => 'nullable|exists:shop_categories,id',
             'name' => 'required|string|max:255',

@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         if ($user && $user->status == 1 && Hash::check($request->password, $user->password)) {
             Auth::login($user);
-            return redirect()->intended($user->is_admin ? '/admin/dashboard' : '/user');
+            return redirect()->intended($user->canAccessAdmin() ? '/admin/dashboard' : '/user');
         }
 
         return back()->withErrors([

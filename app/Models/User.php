@@ -134,7 +134,7 @@ class User extends Authenticatable
      */
     public function canAccessAdmin(): bool
     {
-        return $this->is_admin || $this->role_id !== null;
+        return $this->role && in_array($this->role->slug, ['admin', 'super-admin']);
     }
 
     /**

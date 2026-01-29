@@ -149,9 +149,9 @@
                     </div>
 
                     <!-- Loyalty Points Info -->
-                    @if(session('shop_customer_' . $shop->id) && ($shop->loyaltySettings?->is_enabled ?? false))
+                    @if(session('shop_customer_' . $shop->id) && ($shop->loyaltySetting?->is_enabled ?? false))
                         @php
-                            $earnablePoints = floor($total / 100) * ($shop->loyaltySettings->points_per_currency ?? 1);
+                            $earnablePoints = floor($total / 100) * ($shop->loyaltySetting->points_per_currency ?? 1);
                         @endphp
                         <div class="mt-4 p-3 bg-yellow-50 rounded-lg text-sm">
                             <i class="fas fa-star text-yellow-500 mr-1"></i>

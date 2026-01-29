@@ -96,7 +96,7 @@ class Shop extends Model
         return $this->hasMany(ShopOrder::class);
     }
 
-    public function loyaltySettings(): HasOne
+    public function loyaltySetting(): HasOne
     {
         return $this->hasOne(ShopLoyaltySetting::class);
     }

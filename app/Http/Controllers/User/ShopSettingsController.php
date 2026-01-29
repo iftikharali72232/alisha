@@ -61,8 +61,12 @@ class ShopSettingsController extends Controller
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string|max:500',
             'logo' => 'nullable|image|max:2048',
-            'banner' => 'nullable|image|max:4096',
+            'banner' => 'nullable|image|max:2048',
         ]);
+
+        // Ensure storage directories exist
+        Storage::disk('public')->makeDirectory('shops/logos');
+        Storage::disk('public')->makeDirectory('shops/banners');
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
@@ -70,7 +74,7 @@ class ShopSettingsController extends Controller
                 Storage::disk('public')->delete($shop->logo);
             }
             $validated['logo'] = $request->file('logo')
-                ->store('shops/' . $shop->id, 'public');
+                ->store('shops/logos', 'public');
         }
 
         // Handle banner upload
@@ -79,7 +83,7 @@ class ShopSettingsController extends Controller
                 Storage::disk('public')->delete($shop->banner);
             }
             $validated['banner'] = $request->file('banner')
-                ->store('shops/' . $shop->id, 'public');
+                ->store('shops/banners', 'public');
         }
 
         // Update slug if name changed

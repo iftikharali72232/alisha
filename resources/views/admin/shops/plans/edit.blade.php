@@ -115,12 +115,12 @@
             <h3 class="text-lg font-medium text-gray-900 mb-4">Plan Features</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <label class="flex items-center">
-                    <input type="checkbox" name="loyalty_enabled" value="1" {{ old('loyalty_enabled', $plan->loyalty_enabled) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
-                    <span class="ml-2 text-sm text-gray-700">Loyalty Program</span>
+                    <input type="checkbox" name="has_variations" value="1" {{ old('has_variations', $plan->has_variations) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                    <span class="ml-2 text-sm text-gray-700">Product Variations</span>
                 </label>
                 <label class="flex items-center">
-                    <input type="checkbox" name="advanced_analytics" value="1" {{ old('advanced_analytics', $plan->advanced_analytics) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
-                    <span class="ml-2 text-sm text-gray-700">Advanced Analytics</span>
+                    <input type="checkbox" name="has_offers" value="1" {{ old('has_offers', $plan->has_offers) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                    <span class="ml-2 text-sm text-gray-700">Offers</span>
                 </label>
                 <label class="flex items-center">
                     <input type="checkbox" name="has_coupons" value="1" {{ old('has_coupons', $plan->has_coupons) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
@@ -149,6 +149,10 @@
                 <label class="flex items-center">
                     <input type="checkbox" name="is_active" value="1" {{ old('is_active', $plan->is_active) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
                     <span class="ml-2 text-sm text-gray-700">Active</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $plan->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                    <span class="ml-2 text-sm text-gray-700">Featured Plan</span>
                 </label>
             </div>
         </div>

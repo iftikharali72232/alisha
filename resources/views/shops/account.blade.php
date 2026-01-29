@@ -19,7 +19,7 @@
                 </div>
 
                 <!-- Loyalty Points -->
-                @if($shop->loyaltySettings?->is_enabled)
+                @if($shop->loyaltySetting?->is_enabled)
                     <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg p-4 mb-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -28,9 +28,9 @@
                             </div>
                             <i class="fas fa-star text-3xl opacity-50"></i>
                         </div>
-                        @if($customer->loyalty_points >= ($shop->loyaltySettings->minimum_points_redemption ?? 100))
+                        @if($customer->loyalty_points >= ($shop->loyaltySetting->minimum_points_redemption ?? 100))
                             <p class="text-xs mt-2 opacity-90">
-                                Worth {{ $shop->currency }} {{ number_format($customer->loyalty_points * ($shop->loyaltySettings->points_value ?? 0.01), 2) }}
+                                Worth {{ $shop->currency }} {{ number_format($customer->loyalty_points * ($shop->loyaltySetting->points_value ?? 0.01), 2) }}
                             </p>
                         @endif
                     </div>

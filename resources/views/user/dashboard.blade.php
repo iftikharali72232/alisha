@@ -235,6 +235,29 @@
                 </div>
             </div>
 
+            <!-- Shop Creation Prompt -->
+            @if(!auth()->user()->shop)
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-sm p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Start Your Online Shop</h3>
+                        <p class="text-blue-100 mb-4">Create your own e-commerce store and start selling products online. Get started with a free trial!</p>
+                        <div class="flex items-center space-x-4">
+                            <a href="{{ route('user.shop.create') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <i class="fas fa-plus-circle mr-2"></i>Create Shop
+                            </a>
+                            <span class="text-sm text-blue-200">Free 30-day trial</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-store text-3xl text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Recent Posts & Quick Actions -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Recent Posts -->

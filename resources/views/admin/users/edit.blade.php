@@ -46,7 +46,7 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
                         <option value="">No Role (Regular User)</option>
                         @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
+                            <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }} {{ $role->isSuperAdmin() ? 'disabled' : '' }}>
                                 {{ $role->name }}
                             </option>
                         @endforeach
