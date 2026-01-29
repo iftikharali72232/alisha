@@ -126,6 +126,15 @@ class ShopProduct extends Model
         })->toArray();
     }
 
+    public function getGalleriesAttribute()
+    {
+        if (!$this->gallery_images) return collect();
+        
+        return collect($this->gallery_images)->map(function ($image) {
+            return (object) ['image' => $image];
+        });
+    }
+
     public function getDiscountPercentageAttribute(): ?float
     {
         if (!$this->compare_price || $this->compare_price <= $this->price) {
