@@ -144,6 +144,11 @@ class Shop extends Model
         return $this->status === 'active';
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     // Helper Methods
     public function isOnTrial(): bool
     {

@@ -48,6 +48,11 @@ class ShopCategory extends Model
         return $this->image ? \Storage::url($this->image) : null;
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
