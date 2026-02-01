@@ -155,9 +155,9 @@ class PublicShopController extends Controller
      */
     public function product(Shop $shop, ShopProduct $product)
     {
-        // if (!$shop->is_active || $product->shop_id !== $shop->id) {
-        //     abort(404);
-        // }
+        if (!$shop->is_active || $product->shop_id !== $shop->id) {
+            abort(404);
+        }
 
         $shop->load([
             'categories' => fn($q) => $q->where('is_active', true)->withCount('products'),
@@ -229,7 +229,7 @@ class PublicShopController extends Controller
             $parts = explode('_', $cartKey);
             $productId = $parts[0];
             $product = ShopProduct::find($productId);
-            if ($product && $product->is_active) {
+            if ($product && $product->is_active && $product->shop_id === $shop->id) {
                 $price = $product->getFinalPrice();
                 if (isset($parts[1])) {
                     $variant = $product->variants()->find($parts[1]);
@@ -289,6 +289,13 @@ class PublicShopController extends Controller
         ]);
 
         $cartItems = session('cart_' . $shop->id, []);
+        // Ensure cart items belong to this shop (defensive)
+        $cartItems = array_filter($cartItems, function($item, $key) use ($shop) {
+            $parts = explode('_', $key);
+            $product = \App\Models\ShopProduct::find($parts[0]);
+            return $product && $product->is_active && $product->shop_id === $shop->id;
+        }, ARRAY_FILTER_USE_BOTH);
+
         $cart = [];
         $subtotal = 0;
 
@@ -473,6 +480,12 @@ class PublicShopController extends Controller
         ]);
 
         $cartItems = session('cart_' . $shop->id, []);
+        // Defensive filter: remove items referencing products not belonging to this shop
+        $cartItems = array_filter($cartItems, function($item, $key) use ($shop) {
+            $parts = explode('_', $key);
+            $product = \App\Models\ShopProduct::find($parts[0]);
+            return $product && $product->is_active && $product->shop_id === $shop->id;
+        }, ARRAY_FILTER_USE_BOTH);
         
         if (empty($cartItems)) {
             return redirect()->route('shop.cart', $shop->slug)
@@ -589,6 +602,12 @@ class PublicShopController extends Controller
         }
 
         $cartItems = session('cart_' . $shop->id, []);
+        // Defensive filter to ensure items belong to this shop
+        $cartItems = array_filter($cartItems, function ($item, $key) use ($shop) {
+            $productId = $item['product_id'] ?? explode('_', $key)[0];
+            $product = \App\Models\ShopProduct::find($productId);
+            return $product && $product->is_active && $product->shop_id === $shop->id;
+        }, ARRAY_FILTER_USE_BOTH);
         
         if (empty($cartItems)) {
             return redirect()->route('shop.cart', $shop->slug)
