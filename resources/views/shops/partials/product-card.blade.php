@@ -1,4 +1,4 @@
-@if(!isset($shop) || $product->shop_id === $shop->id)
+@if(!isset($shop) || $product->shop_id == $shop->id)
     <div class="product-card bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg block">
     <!-- Image -->
     <div class="relative aspect-square overflow-hidden">

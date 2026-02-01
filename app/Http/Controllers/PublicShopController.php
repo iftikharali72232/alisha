@@ -156,7 +156,7 @@ class PublicShopController extends Controller
     public function product(Shop $shop, ShopProduct $product)
     {
         // Check shop is active and product belongs to this shop
-        if ($shop->status !== 'active' || $product->shop_id !== $shop->id || !$product->is_active) {
+        if ($shop->status !== 'active' || (int) $product->shop_id !== (int) $shop->id || !$product->is_active) {
             abort(404);
         }
 
@@ -185,7 +185,7 @@ class PublicShopController extends Controller
     public function category(Shop $shop, ShopCategory $category)
     {
         // Check shop is active and category belongs to this shop
-        if ($shop->status !== 'active' || $category->shop_id !== $shop->id || !$category->is_active) {
+        if ($shop->status !== 'active' || (int) $category->shop_id !== (int) $shop->id || !$category->is_active) {
             abort(404);
         }
 
@@ -231,7 +231,7 @@ class PublicShopController extends Controller
             $parts = explode('_', $cartKey);
             $productId = $parts[0];
             $product = ShopProduct::find($productId);
-            if ($product && $product->is_active && $product->shop_id === $shop->id) {
+            if ($product && $product->is_active && (int) $product->shop_id === (int) $shop->id) {
                 $price = $product->getFinalPrice();
                 if (isset($parts[1])) {
                     $variant = $product->variants()->find($parts[1]);
@@ -295,7 +295,7 @@ class PublicShopController extends Controller
         $cartItems = array_filter($cartItems, function($item, $key) use ($shop) {
             $parts = explode('_', $key);
             $product = \App\Models\ShopProduct::find($parts[0]);
-            return $product && $product->is_active && $product->shop_id === $shop->id;
+            return $product && $product->is_active && (int) $product->shop_id === (int) $shop->id;
         }, ARRAY_FILTER_USE_BOTH);
 
         $cart = [];
@@ -361,7 +361,7 @@ class PublicShopController extends Controller
     public function addToCart(Request $request, Shop $shop, ShopProduct $product)
     {
         // Verify shop is active and product belongs to this shop
-        if ($shop->status !== 'active' || !$product->is_active || $product->shop_id !== $shop->id) {
+        if ($shop->status !== 'active' || !$product->is_active || (int) $product->shop_id !== (int) $shop->id) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Product not available'], 404);
             }
@@ -487,7 +487,7 @@ class PublicShopController extends Controller
         $cartItems = array_filter($cartItems, function($item, $key) use ($shop) {
             $parts = explode('_', $key);
             $product = \App\Models\ShopProduct::find($parts[0]);
-            return $product && $product->is_active && $product->shop_id === $shop->id;
+            return $product && $product->is_active && (int) $product->shop_id === (int) $shop->id;
         }, ARRAY_FILTER_USE_BOTH);
         
         if (empty($cartItems)) {
@@ -625,7 +625,7 @@ class PublicShopController extends Controller
         $cartItems = array_filter($cartItems, function ($item, $key) use ($shop) {
             $productId = $item['product_id'] ?? explode('_', $key)[0];
             $product = \App\Models\ShopProduct::find($productId);
-            return $product && $product->is_active && $product->shop_id === $shop->id;
+            return $product && $product->is_active && (int) $product->shop_id === (int) $shop->id;
         }, ARRAY_FILTER_USE_BOTH);
         
         if (empty($cartItems)) {
@@ -1027,7 +1027,7 @@ class PublicShopController extends Controller
      */
     public function offer(Shop $shop, ShopOffer $offer)
     {
-        if ($offer->shop_id !== $shop->id) {
+        if ((int) $offer->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
