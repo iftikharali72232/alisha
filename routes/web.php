@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
         Route::get('customers/{customer}/edit', [ShopCustomerController::class, 'edit'])->name('customers.edit');
         Route::put('customers/{customer}', [ShopCustomerController::class, 'update'])->name('customers.update');
         Route::post('customers/{customer}/loyalty', [ShopCustomerController::class, 'adjustLoyaltyPoints'])->name('customers.loyalty');
+        // Delete customer
+        Route::delete('customers/{customer}', [ShopCustomerController::class, 'destroy'])->name('customers.destroy');
         
         // Sliders
         Route::get('sliders', [ShopSliderController::class, 'index'])->name('sliders.index');

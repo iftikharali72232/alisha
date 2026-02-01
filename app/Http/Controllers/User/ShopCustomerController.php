@@ -105,6 +105,23 @@ class ShopCustomerController extends Controller
             ->with('success', 'Customer updated successfully!');
     }
 
+    /**
+     * Delete a customer (only by shop owner). This will cascade-delete related addresses and coupon usages as per DB constraints.
+     */
+    public function destroy(ShopCustomer $customer)
+    {
+        $shop = $this->getUserShop();
+        if (!$shop || (int) $customer->shop_id !== (int) $shop->id) {
+            abort(404);
+        }
+
+        // Soft delete/unlink related records handled by DB onDelete rules (addresses, coupon usages). Orders.customer_id is set to NULL by DB.
+        $customer->delete();
+
+        return redirect()->route('user.shop.customers.index')
+            ->with('success', 'Customer deleted successfully.');
+    }
+
     public function adjustLoyaltyPoints(Request $request, ShopCustomer $customer)
     {
         $shop = $this->getUserShop();
