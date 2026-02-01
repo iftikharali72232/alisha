@@ -103,6 +103,7 @@ class PublicShopController extends Controller
 
         $shop->load([
             'categories' => fn($q) => $q->where('is_active', true)->withCount('products'),
+            'activeSubscription.plan',
         ]);
 
         $query = $shop->products()

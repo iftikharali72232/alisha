@@ -156,8 +156,8 @@
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4">{{ $shop->name }}</h3>
                     <p class="text-sm mb-4">{{ $shop->description }}</p>
-                    @if($shop->whatsapp_number)
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $shop->whatsapp_number) }}" 
+                    @if($shop->isProfessional() && !empty($shop->whatsapp))
+                        <a href="https://wa.me/{{ preg_replace('/\D+/', '', $shop->whatsapp) }}" 
                            class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
                             <i class="fab fa-whatsapp mr-2"></i> WhatsApp
                         </a>
@@ -222,11 +222,17 @@
     </footer>
 
     <!-- WhatsApp Float Button -->
-    @if($shop->whatsapp_number)
-        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $shop->whatsapp_number) }}?text={{ urlencode('Hello! I have a question about your products.') }}" 
+    @if($shop->isProfessional() && !empty($shop->whatsapp))
+        <a href="https://wa.me/{{ preg_replace('/\D+/', '', $shop->whatsapp) }}?text={{ urlencode('Hi! I\'d like to chat about an order. ' . url()->current()) }}"
            target="_blank"
-           class="fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all hover:scale-110 z-50">
-            <i class="fab fa-whatsapp text-2xl"></i>
+           rel="noopener noreferrer"
+           class="fixed bottom-6 right-6 z-50 group"
+           aria-label="Chat on WhatsApp">
+            <span class="absolute inset-0 rounded-full bg-green-500 opacity-25 animate-ping"></span>
+            <span class="absolute inset-0 rounded-full bg-green-500 opacity-20 blur-md"></span>
+            <span class="relative w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg transition-all group-hover:bg-green-600 group-hover:scale-125">
+                <i class="fab fa-whatsapp text-3xl"></i>
+            </span>
         </a>
     @endif
 

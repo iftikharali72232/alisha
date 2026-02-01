@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Shop;
+use App\Models\ShopProduct;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\AuthController;
@@ -223,7 +225,7 @@ Route::prefix('admin')->group(function () {
 Route::get('/shops', [PublicShopController::class, 'allShops'])->name('shops.index');
 
 // Individual Shop Routes (must be last to avoid conflicts)
-Route::prefix('shop/{shop:slug}')->name('shop.')->group(function () {
+Route::scopeBindings()->prefix('shop/{shop:slug}')->name('shop.')->group(function () {
     Route::get('/', [PublicShopController::class, 'show'])->name('show');
     Route::get('/products', [PublicShopController::class, 'products'])->name('products');
     Route::get('/product/{product:slug}', [PublicShopController::class, 'product'])->name('product');

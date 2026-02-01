@@ -144,6 +144,18 @@ class Shop extends Model
         return $this->status === 'active';
     }
 
+    public function isProfessional(): bool
+    {
+        $subscription = $this->activeSubscription;
+        if (!$subscription) {
+            return false;
+        }
+
+        $subscription->loadMissing('plan');
+
+        return ($subscription->plan?->slug) === 'pro';
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';

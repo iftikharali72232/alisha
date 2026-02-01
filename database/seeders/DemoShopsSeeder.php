@@ -261,7 +261,7 @@ class DemoShopsSeeder extends Seeder
                     $price = rand(500, 10000);
                     
                     ShopProduct::firstOrCreate(
-                        ['shop_id' => $shop->id, 'slug' => Str::slug($productName . '-' . $shop->id . '-' . $i)],
+                        ['shop_id' => $shop->id, 'slug' => Str::slug($productName . '-' . $shop->slug . '-' . $category->slug . '-' . $i)],
                         [
                             'category_id' => $category->id,
                             'name' => $productName,

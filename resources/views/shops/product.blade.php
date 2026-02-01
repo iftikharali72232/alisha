@@ -171,14 +171,6 @@
                             <i class="fas fa-times-circle mr-2"></i> Out of Stock
                         </button>
                     @endif
-                    
-                    @if($shop->whatsapp_number)
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $shop->whatsapp_number) }}?text={{ urlencode('Hi! I\'m interested in: ' . $product->name . ' - ' . url()->current()) }}" 
-                           target="_blank"
-                           class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium">
-                            <i class="fab fa-whatsapp mr-2"></i> Order via WhatsApp
-                        </a>
-                    @endif
                 </div>
             </form>
 
