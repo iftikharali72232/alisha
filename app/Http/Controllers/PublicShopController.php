@@ -155,6 +155,10 @@ class PublicShopController extends Controller
      */
     public function product(Shop $shop, ShopProduct $product)
     {
+        echo "<pre>";
+        print_r($shop);
+        print_r($product);
+        exit;
         if (!$shop->is_active || $product->shop_id !== $shop->id) {
             abort(404);
         }
