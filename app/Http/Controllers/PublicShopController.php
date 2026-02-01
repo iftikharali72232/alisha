@@ -155,7 +155,7 @@ class PublicShopController extends Controller
      */
     public function product(Shop $shop, ShopProduct $product)
     {
-        if (!$shop->is_active || !$product->is_active || $product->shop_id !== $shop->id) {
+        if (!$shop->is_active || $product->shop_id !== $shop->id) {
             abort(404);
         }
 
