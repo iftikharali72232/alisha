@@ -154,9 +154,10 @@
 <script>
     function updateOrderStatus(orderId, status) {
         fetch(`{{ url('user/shop/orders') }}/${orderId}/status`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
             body: JSON.stringify({ status: status })

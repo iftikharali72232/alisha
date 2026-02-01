@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::get('orders', [ShopOrderController::class, 'index'])->name('orders.index');
         Route::get('orders/export', [ShopOrderController::class, 'export'])->name('orders.export');
         Route::get('orders/{order}', [ShopOrderController::class, 'show'])->name('orders.show');
-        Route::put('orders/{order}/status', [ShopOrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::match(['put', 'patch'], 'orders/{order}/status', [ShopOrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::get('orders/{order}/invoice', [ShopOrderController::class, 'invoice'])->name('orders.invoice');
         Route::get('orders/{order}/print', [ShopOrderController::class, 'printInvoice'])->name('orders.print');
         

@@ -125,7 +125,7 @@
             <div class="p-4">
                 <form action="{{ route('user.shop.orders.update-status', $order) }}" method="POST">
                     @csrf
-                    @method('PATCH')
+                    @method('PUT')
                     <select name="status" onchange="this.form.submit()"
                         class="w-full border rounded-lg px-4 py-2 focus:ring-pink-500 focus:border-pink-500
                             {{ $order->status === 'pending' ? 'bg-yellow-50' : '' }}

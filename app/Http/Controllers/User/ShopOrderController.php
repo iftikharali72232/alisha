@@ -65,7 +65,7 @@ class ShopOrderController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $order->shop_id !== $shop->id) {
+        if (!$shop || (int) $order->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
@@ -78,7 +78,7 @@ class ShopOrderController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $order->shop_id !== $shop->id) {
+        if (!$shop || (int) $order->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
@@ -108,6 +108,10 @@ class ShopOrderController extends Controller
             }
         }
 
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Order status updated successfully!']);
+        }
+
         return back()->with('success', 'Order status updated successfully!');
     }
 
@@ -115,7 +119,7 @@ class ShopOrderController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $order->shop_id !== $shop->id) {
+        if (!$shop || (int) $order->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
@@ -128,7 +132,7 @@ class ShopOrderController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $order->shop_id !== $shop->id) {
+        if (!$shop || (int) $order->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
