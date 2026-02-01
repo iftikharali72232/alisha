@@ -20,6 +20,12 @@
     </div>
 @endif
 
+@if(session('info'))
+    <div class="mb-6 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
+        {{ session('info') }}
+    </div>
+@endif
+
 <form action="{{ route('user.shop.settings.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
@@ -174,7 +180,46 @@
             </h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+        </div>
+
+        <!-- Theme & Branding -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-paint-brush text-pink-500"></i> Theme &amp; Branding
+            </h3>
+
+            @if($shop->canCustomizeTheme())
+                <p class="text-sm text-gray-600 mb-4">Choose your shop's theme colors. These colors will be used across the storefront (buttons, accents, and the WhatsApp widget).</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Primary Color</label>
+                        <input type="color" name="primary_color" id="primary_color" value="{{ old('primary_color', $shop->primary_color ?? '#ec4899') }}" class="w-20 h-10 p-0 border-0">
+                        <p class="text-xs text-gray-500 mt-1">Used for buttons and accents</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Secondary Color</label>
+                        <input type="color" name="secondary_color" id="secondary_color" value="{{ old('secondary_color', $shop->secondary_color ?? '#8b5cf6') }}" class="w-20 h-10 p-0 border-0">
+                        <p class="text-xs text-gray-500 mt-1">Used for gradients and highlights</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Preview</label>
+                        <div id="theme-preview" class="w-full h-16 rounded-lg flex items-center justify-center text-white font-medium" style="background: linear-gradient(90deg, {{ $shop->primary_color ?? '#ec4899' }}, {{ $shop->secondary_color ?? '#8b5cf6' }});">
+                            <span>Live Preview</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Hover over other pages to see full effect</p>
+                    </div>
+                </div>
+
+            @else
+                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p class="text-sm text-yellow-700">Theme customization is available for <strong>Professional</strong> and <strong>Premium</strong> plans only.</p>
+                    <a href="{{ route('user.shop.subscription') }}" class="inline-block mt-3 px-4 py-2 bg-pink-600 text-white rounded-lg">Upgrade Plan</a>
+                </div>
+            @endif
+        </div>                <div>
                     <label for="facebook" class="block text-sm font-medium text-gray-700 mb-1">
                         <i class="fab fa-facebook text-blue-600 mr-1"></i> Facebook
                     </label>
@@ -385,6 +430,25 @@
             </button>
         </div>
     </div>
+    <!-- Live preview script for Theme -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const primary = document.getElementById('primary_color');
+            const secondary = document.getElementById('secondary_color');
+            const preview = document.getElementById('theme-preview');
+
+            if (primary && secondary && preview) {
+                function updatePreview() {
+                    const p = primary.value || '#ec4899';
+                    const s = secondary.value || '#8b5cf6';
+                    preview.style.background = `linear-gradient(90deg, ${p}, ${s})`;
+                }
+
+                primary.addEventListener('input', updatePreview);
+                secondary.addEventListener('input', updatePreview);
+            }
+        });
+    </script>
 </form>
 
 @push('scripts')

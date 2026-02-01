@@ -34,6 +34,8 @@ class Shop extends Model
         'social_links',
         'meta_title',
         'meta_description',
+        'primary_color',
+        'secondary_color',
     ];
 
     protected $casts = [
@@ -153,7 +155,22 @@ class Shop extends Model
 
         $subscription->loadMissing('plan');
 
-        return ($subscription->plan?->slug) === 'pro';
+        return ($subscription->plan?->slug) === 'pro' || ($subscription->plan?->slug) === 'professional';
+    }
+
+    /**
+     * Can this shop customize theme colors? Available for paid plans only.
+     */
+    public function canCustomizeTheme(): bool
+    {
+        $subscription = $this->activeSubscription;
+        if (!$subscription) return false;
+
+        $subscription->loadMissing('plan');
+        $slug = $subscription->plan?->slug;
+
+        // include older 'pro' slug for backwards compatibility
+        return in_array($slug, ['pro', 'professional', 'premium', 'enterprise'], true);
     }
 
     public function getRouteKeyName(): string

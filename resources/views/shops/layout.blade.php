@@ -41,6 +41,38 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
         }
+
+        /* WhatsApp widget styles */
+        .wa-widget { position: fixed; right: 1.5rem; bottom: 2rem; z-index: 60; }
+        .wa-widget .wa-pulse { position: absolute; inset: 0; border-radius: 9999px; border: 2px solid rgba(34,197,94,0.12); box-shadow: 0 10px 30px rgba(16,24,40,0.12); animation: wa-pulse 2.8s infinite; }
+        .wa-widget .wa-wave { position: absolute; inset: -8px; border-radius: 9999px; opacity: 0; transform: scale(.85); pointer-events: none; }
+        /* wave 1 - primary */
+        .wa-widget .wa-wave.wa-wave-1 { border: 2px solid rgba( var(--wa-primary-rgb, 34,197,94), 0.42); background: linear-gradient(180deg, rgba(var(--wa-primary-rgb,34,197,94),0.04), rgba(var(--wa-primary-rgb,34,197,94),0.01)); box-shadow: 0 12px 30px rgba(var(--wa-primary-rgb,34,197,94),0.06); animation: wa-wave 2.6s infinite; }
+        /* wave 2 - secondary */
+        .wa-widget .wa-wave.wa-wave-2 { border: 2px solid rgba( var(--wa-secondary-rgb, 139,92,246), 0.36); background: linear-gradient(180deg, rgba(var(--wa-secondary-rgb,139,92,246),0.035), rgba(var(--wa-secondary-rgb,139,92,246),0.008)); box-shadow: 0 12px 30px rgba(var(--wa-secondary-rgb,139,92,246),0.05); animation: wa-wave 3.2s infinite .4s; }
+        /* wave 3 - blended tertiary */
+        .wa-widget .wa-wave.wa-wave-3 { border: 2px solid rgba(255,203,75,0.28); background: linear-gradient(180deg, rgba(255,203,75,0.03), rgba(255,203,75,0.006)); box-shadow: 0 12px 30px rgba(255,203,75,0.05); animation: wa-wave 3.8s infinite .9s; }
+        .wa-widget .wa-button { position: relative; display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:9999px; border:2px solid rgba(var(--wa-primary-rgb,34,197,94),0.28); background: linear-gradient(180deg, rgba(var(--wa-primary-rgb,34,197,94),0.08), rgba(var(--wa-secondary-rgb,139,92,246),0.04)); color: rgba(var(--wa-primary-rgb,34,197,94),1); transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease; box-shadow: 0 8px 20px rgba(16,24,40,0.08); backdrop-filter: blur(4px); }
+        .wa-widget .wa-button i { font-size: 1.6rem; transition: transform .18s ease; }
+        .wa-widget:hover .wa-button, .wa-widget:focus-within .wa-button { background: linear-gradient(135deg,var(--shop-primary),var(--shop-secondary)); color: #fff; transform: translateY(-6px) scale(1.08); box-shadow: 0 20px 40px rgba(16,24,40,0.25), 0 0 30px rgba(var(--wa-primary-rgb,34,197,94),0.12); }
+        .wa-widget:hover .wa-button i { transform: scale(1.1); }
+        .wa-widget .wa-tooltip { position:absolute; right: calc(100% + 0.75rem); top:50%; transform: translateY(-50%) translateX(6px); background: rgba(15,23,42,0.95); color:#fff; padding:6px 10px; border-radius:8px; font-size:0.85rem; white-space:nowrap; opacity:0; pointer-events:none; transition: opacity .18s ease, transform .18s ease; box-shadow: 0 8px 20px rgba(2,6,23,0.4); }
+        .wa-widget:hover .wa-tooltip, .wa-widget:focus-within .wa-tooltip { opacity:1; transform: translateY(-50%) translateX(0); }
+        .wa-widget .wa-pulse { opacity: 0.35; }
+        @keyframes wa-pulse { 0% { transform: scale(0.95); opacity: .45 } 50% { transform: scale(1.05); opacity: .2 } 100% { transform: scale(0.95); opacity: .45 } }
+
+        @keyframes wa-wave { 0% { transform: scale(.9); opacity: .7 } 60% { transform: scale(2.0); opacity: .2 } 100% { transform: scale(2.8); opacity: 0 } }
+        .wa-widget:hover .wa-wave { opacity: .8; filter: drop-shadow(0 12px 40px rgba(0,0,0,0.06)); }
+        /* expose rgb variables from shop primary/secondary for stronger color blending */
+        :root { --wa-primary-rgb: 34,197,94; --wa-secondary-rgb: 139,92,246; }
+        /* Focus ring and accessibility */
+        .wa-widget .wa-button:focus { outline: none; box-shadow: 0 0 0 6px rgba(var(--wa-primary-rgb,34,197,94),0.12); }
+        /* Responsive small screens */
+        @media (max-width: 640px) {
+            .wa-widget { right: 1rem; bottom: 1rem; }
+            .wa-widget .wa-button { width:56px; height:56px; }
+            .wa-widget .wa-button i { font-size: 1.3rem; }
+        }
     </style>
     
     @stack('styles')
@@ -226,13 +258,16 @@
         <a href="https://wa.me/{{ preg_replace('/\D+/', '', $shop->whatsapp) }}?text={{ urlencode('Hi! I\'d like to chat about an order. ' . url()->current()) }}"
            target="_blank"
            rel="noopener noreferrer"
-           class="fixed bottom-6 right-6 z-50 group"
+           class="wa-widget"
            aria-label="Chat on WhatsApp">
-            <span class="absolute inset-0 rounded-full bg-green-500 opacity-25 animate-ping"></span>
-            <span class="absolute inset-0 rounded-full bg-green-500 opacity-20 blur-md"></span>
-            <span class="relative w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg transition-all group-hover:bg-green-600 group-hover:scale-125">
-                <i class="fab fa-whatsapp text-3xl"></i>
+            <span class="wa-pulse" aria-hidden="true"></span>
+            <span class="wa-wave wa-wave-1" aria-hidden="true"></span>
+            <span class="wa-wave wa-wave-2" aria-hidden="true"></span>
+            <span class="wa-wave wa-wave-3" aria-hidden="true"></span>
+            <span class="wa-button" role="button" tabindex="0">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
             </span>
+            <span class="wa-tooltip">Chat on WhatsApp</span>
         </a>
     @endif
 

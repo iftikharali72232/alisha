@@ -55,14 +55,20 @@ class ShopSettingsController extends Controller
             'shipping_fee' => 'nullable|numeric|min:0',
             'free_shipping_threshold' => 'nullable|numeric|min:0',
             'minimum_order' => 'nullable|numeric|min:0',
-            'primary_color' => 'nullable|string|max:20',
-            'secondary_color' => 'nullable|string|max:20',
+            'primary_color' => ['nullable','regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
+            'secondary_color' => ['nullable','regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string|max:500',
             'logo' => 'nullable|image|max:2048',
             'banner' => 'nullable|image|max:2048',
         ]);
+
+        // Prevent unauthorized color customization if plan doesn't allow it
+        if (! $shop->canCustomizeTheme()) {
+            // Remove color fields if present in the request so they are not saved
+            unset($validated['primary_color'], $validated['secondary_color']);
+        }
 
         // Ensure storage directories exist
         Storage::disk('public')->makeDirectory('shops/logos');
@@ -96,9 +102,18 @@ class ShopSettingsController extends Controller
             $validated['social_links'] = array_filter($validated['social_links']);
         }
 
+        // track if colors were attempted but blocked
+        $blockedColors = ($request->hasAny(['primary_color','secondary_color']) && ! $shop->canCustomizeTheme());
+
         $shop->update($validated);
 
-        return redirect()->route('user.shop.settings.index')
+        $redirect = redirect()->route('user.shop.settings.index')
             ->with('success', 'Settings updated successfully!');
+
+        if ($blockedColors) {
+            $redirect = $redirect->with('info', 'Theme customization is available only on Professional and Premium plans. Color changes were not saved.');
+        }
+
+        return $redirect;
     }
 }
