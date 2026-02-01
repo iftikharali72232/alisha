@@ -233,15 +233,19 @@ Route::prefix('shop/{shop:slug}')
     Route::get('/product/{product:slug}', [PublicShopController::class, 'product'])
         ->withoutScopedBindings()
         ->name('product');
-    Route::get('/category/{category:slug}', [PublicShopController::class, 'category'])->name('category');
+    Route::get('/category/{category:slug}', [PublicShopController::class, 'category'])
+        ->withoutScopedBindings()
+        ->name('category');
     
     // Cart
     Route::get('/cart', [PublicShopController::class, 'cart'])->name('cart');
     Route::get('/cart/add/{product:slug}', function (Shop $shop, ShopProduct $product) {
         return redirect()->route('shop.product', [$shop->slug, $product->slug])
             ->with('error', 'Please use the add to cart button on the product page.');
-    });
-    Route::post('/cart/add/{product:slug}', [PublicShopController::class, 'addToCart'])->name('cart.add');
+    })->withoutScopedBindings();
+    Route::post('/cart/add/{product:slug}', [PublicShopController::class, 'addToCart'])
+        ->withoutScopedBindings()
+        ->name('cart.add');
     Route::put('/cart/update', [PublicShopController::class, 'updateCart'])->name('cart.update');
     Route::delete('/cart/remove', [PublicShopController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/cart/coupon', [PublicShopController::class, 'applyCoupon'])->name('cart.coupon');
@@ -266,9 +270,13 @@ Route::prefix('shop/{shop:slug}')
     Route::get('/categories', [PublicShopController::class, 'categories'])->name('categories');
     Route::get('/search', [PublicShopController::class, 'search'])->name('search');
     Route::get('/offers', [PublicShopController::class, 'offers'])->name('offers');
-    Route::get('/offer/{offer}', [PublicShopController::class, 'offer'])->name('offer');
+    Route::get('/offer/{offer}', [PublicShopController::class, 'offer'])
+        ->withoutScopedBindings()
+        ->name('offer');
     Route::get('/contact', [PublicShopController::class, 'contact'])->name('contact');
     
     // Reviews
-    Route::post('/review/{product}', [PublicShopController::class, 'submitReview'])->name('review.store');
+    Route::post('/review/{product}', [PublicShopController::class, 'submitReview'])
+        ->withoutScopedBindings()
+        ->name('review.store');
 });

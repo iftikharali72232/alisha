@@ -13,7 +13,7 @@
             <!-- Checkout Form -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Customer Info -->
-                @if(!session('shop_customer_' . $shop->id))
+                @if(!$customer)
                     <div class="bg-white rounded-xl shadow p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xl font-bold text-gray-800">Contact Information</h2>
@@ -49,19 +49,20 @@
                         </div>
                     </div>
                 @else
-                    @php $customer = session('shop_customer_' . $shop->id); @endphp
                     <div class="bg-white rounded-xl shadow p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4">Contact Information</h2>
                         <div class="flex items-center">
                             <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mr-4">
-                                <span class="text-pink-600 font-bold text-lg">{{ substr($customer['name'], 0, 1) }}</span>
+                                <span class="text-pink-600 font-bold text-lg">{{ substr($customer->name ?? 'G', 0, 1) }}</span>
                             </div>
                             <div>
-                                <p class="font-medium text-gray-800">{{ $customer['name'] }}</p>
-                                <p class="text-gray-500 text-sm">{{ $customer['email'] ?? $customer['phone'] }}</p>
+                                <p class="font-medium text-gray-800">{{ $customer->name ?? 'Guest' }}</p>
+                                <p class="text-gray-500 text-sm">{{ $customer->email ?? $customer->phone ?? '' }}</p>
                             </div>
                         </div>
-                        <input type="hidden" name="customer_id" value="{{ $customer['id'] }}">
+                        <input type="hidden" name="billing_name" value="{{ $customer->name ?? '' }}">
+                        <input type="hidden" name="billing_email" value="{{ $customer->email ?? '' }}">
+                        <input type="hidden" name="billing_phone" value="{{ $customer->phone ?? '' }}">
                     </div>
                 @endif
 

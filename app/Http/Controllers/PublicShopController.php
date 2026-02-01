@@ -44,7 +44,7 @@ class PublicShopController extends Controller
      */
     public function show(Shop $shop)
     {
-        if (!$shop->is_active) {
+        if ($shop->status !== 'active') {
             abort(404);
         }
 
@@ -97,7 +97,7 @@ class PublicShopController extends Controller
      */
     public function products(Request $request, Shop $shop)
     {
-        if (!$shop->is_active) {
+        if ($shop->status !== 'active') {
             abort(404);
         }
 
@@ -155,13 +155,10 @@ class PublicShopController extends Controller
      */
     public function product(Shop $shop, ShopProduct $product)
     {
-        if (!$shop->is_active || $product->shop_id !== $shop->id) {
+        // Check shop is active and product belongs to this shop
+        if ($shop->status !== 'active' || $product->shop_id !== $shop->id || !$product->is_active) {
             abort(404);
         }
-        echo "<pre>";
-        print_r($shop);
-        print_r($product);
-        exit;
 
         $shop->load([
             'categories' => fn($q) => $q->where('is_active', true)->withCount('products'),
@@ -187,7 +184,8 @@ class PublicShopController extends Controller
      */
     public function category(Shop $shop, ShopCategory $category)
     {
-        if (!$shop->is_active || $category->shop_id !== $shop->id) {
+        // Check shop is active and category belongs to this shop
+        if ($shop->status !== 'active' || $category->shop_id !== $shop->id || !$category->is_active) {
             abort(404);
         }
 
@@ -362,6 +360,7 @@ class PublicShopController extends Controller
      */
     public function addToCart(Request $request, Shop $shop, ShopProduct $product)
     {
+        // Verify shop is active and product belongs to this shop
         if ($shop->status !== 'active' || !$product->is_active || $product->shop_id !== $shop->id) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Product not available'], 404);
@@ -531,9 +530,25 @@ class PublicShopController extends Controller
 
         // Calculate totals (discount will be applied during order placement)
         $discount = 0; // Don't pre-calculate discount
+        $appliedCoupon = null;
+        $couponCode = session('cart_coupon_' . $shop->id);
+        if ($couponCode) {
+            $coupon = $shop->coupons()->where('code', strtoupper($couponCode))->first();
+            if ($coupon) {
+                $customerId = session('shop_customer_' . $shop->id);
+                if (!$coupon->getValidationError($subtotal, $customerId)) {
+                    $discount = $coupon->calculateDiscount($subtotal);
+                    $appliedCoupon = $coupon;
+                }
+            }
+        }
         $tax = 0; // Calculate based on products
         $shipping = 0; // Can be configured per shop - free shipping for now
         $total = $subtotal - $discount + $tax + $shipping;
+
+        // Get customer if logged in
+        $customerId = session('shop_customer_' . $shop->id);
+        $customer = $customerId ? ShopCustomer::find($customerId) : null;
 
         // States/Provinces of Pakistan
         $states = [
