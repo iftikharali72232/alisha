@@ -81,6 +81,24 @@ class ShopOrder extends Model
         return $this->hasOne(ShopCouponUsage::class, 'order_id');
     }
 
+    /**
+     * Convenience relation to directly access the coupon used on the order.
+     * Allows eager-loading 'coupon' and keeps backward compatibility for places
+     * that used to call $order->coupon.
+     */
+    public function coupon()
+    {
+        // Order -> ShopCouponUsage (order_id) -> ShopCoupon (coupon_id)
+        return $this->hasOneThrough(
+            ShopCoupon::class,
+            ShopCouponUsage::class,
+            'order_id', // Foreign key on ShopCouponUsage table referencing this order
+            'id',       // Local key on ShopCoupon table (primary key)
+            'id',       // Local key on this model (ShopOrder)
+            'coupon_id' // Foreign key on ShopCouponUsage referencing ShopCoupon
+        );
+    }
+
     // Status labels with colors for UI
     public function getStatusLabelAttribute(): array
     {

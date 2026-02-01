@@ -69,7 +69,8 @@ class ShopOrderController extends Controller
             abort(404);
         }
 
-        $order->load(['customer', 'items.product', 'coupon']);
+        // coupon is available via couponUsage relationship
+        $order->load(['customer', 'items.product', 'couponUsage.coupon']);
 
         return view('user.shop.orders.show', compact('shop', 'order'));
     }
@@ -123,7 +124,7 @@ class ShopOrderController extends Controller
             abort(404);
         }
 
-        $order->load(['customer', 'items.product', 'coupon']);
+        $order->load(['customer', 'items.product', 'couponUsage.coupon']);
 
         return view('user.shop.orders.invoice', compact('shop', 'order'));
     }
@@ -136,7 +137,7 @@ class ShopOrderController extends Controller
             abort(404);
         }
 
-        $order->load(['customer', 'items.product', 'coupon']);
+        $order->load(['customer', 'items.product', 'couponUsage.coupon']);
 
         return view('user.shop.orders.print-invoice', compact('shop', 'order'));
     }
