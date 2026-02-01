@@ -216,14 +216,20 @@
                     <i class="fas fa-envelope mr-2"></i>Send Email
                 </a>
 
-                <form action="{{ route('user.shop.customers.destroy', $customer) }}" method="POST" class="inline"
-                    onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+                @if(Route::has('user.shop.customers.destroy'))
+                    <form action="{{ route('user.shop.customers.destroy', $customer) }}" method="POST" class="inline"
+                        onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+                            <i class="fas fa-trash mr-2"></i>Delete Customer
+                        </button>
+                    </form>
+                @else
+                    <button type="button" disabled class="w-full bg-red-300 text-white py-2 px-4 rounded-lg cursor-not-allowed" title="Delete route not available on this environment">
                         <i class="fas fa-trash mr-2"></i>Delete Customer
                     </button>
-                </form>
+                @endif
             </div>
         </div>
     </div>
