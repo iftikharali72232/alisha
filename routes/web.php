@@ -225,10 +225,14 @@ Route::prefix('admin')->group(function () {
 Route::get('/shops', [PublicShopController::class, 'allShops'])->name('shops.index');
 
 // Individual Shop Routes (must be last to avoid conflicts)
-Route::scopeBindings()->prefix('shop/{shop:slug}')->name('shop.')->group(function () {
+Route::prefix('shop/{shop:slug}')
+    ->name('shop.')
+    ->group(function () {
     Route::get('/', [PublicShopController::class, 'show'])->name('show');
     Route::get('/products', [PublicShopController::class, 'products'])->name('products');
-    Route::get('/product/{product:slug}', [PublicShopController::class, 'product'])->name('product');
+    Route::get('/product/{product:slug}', [PublicShopController::class, 'product'])
+        ->withoutScopedBindings()
+        ->name('product');
     Route::get('/category/{category:slug}', [PublicShopController::class, 'category'])->name('category');
     
     // Cart
