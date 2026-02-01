@@ -155,13 +155,13 @@ class PublicShopController extends Controller
      */
     public function product(Shop $shop, ShopProduct $product)
     {
+        if (!$shop->is_active || $product->shop_id !== $shop->id) {
+            abort(404);
+        }
         echo "<pre>";
         print_r($shop);
         print_r($product);
         exit;
-        if (!$shop->is_active || $product->shop_id !== $shop->id) {
-            abort(404);
-        }
 
         $shop->load([
             'categories' => fn($q) => $q->where('is_active', true)->withCount('products'),
