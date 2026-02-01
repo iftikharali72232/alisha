@@ -12,6 +12,20 @@
         .mobile-menu-overlay {
             backdrop-filter: blur(4px);
         }
+        /* Print rules: hide sidebars and UI chrome when printing */
+        @media print {
+            #sidebar, .sidebar-transition, .mobile-menu-overlay, .nav-link, .no-print, .wa-widget {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            /* Ensure content area spans full width when printing */
+            .min-h-screen {
+                min-height: auto !important;
+            }
+            body {
+                background: #fff !important;
+            }
+        }
     </style>
     @yield('styles')
 </head>

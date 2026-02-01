@@ -21,6 +21,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        /* Print rules: hide sidebar and UI chrome when printing */
+        @media print {
+            #sidebar, .sidebar-transition, .mobile-menu-overlay, .no-print, .wa-widget {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            body { background: #fff !important; }
+        }
         .mobile-menu-overlay { backdrop-filter: blur(4px); }
     </style>
 </head>

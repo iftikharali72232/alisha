@@ -51,7 +51,7 @@ class ShopCustomerController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $customer->shop_id !== $shop->id) {
+        if (!$shop || (int) $customer->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
@@ -75,7 +75,7 @@ class ShopCustomerController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $customer->shop_id !== $shop->id) {
+        if (!$shop || (int) $customer->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
@@ -86,7 +86,7 @@ class ShopCustomerController extends Controller
     {
         $shop = $this->getUserShop();
         
-        if (!$shop || $customer->shop_id !== $shop->id) {
+        if (!$shop || (int) $customer->shop_id !== (int) $shop->id) {
             abort(404);
         }
 
