@@ -1,7 +1,16 @@
 @extends('layouts.blog')
 
 @section('title', $post->title)
-@section('meta_description', Str::limit(strip_tags($post->content), 160))
+@section('meta_description', Str::limit(strip_tags($post->excerpt ?? $post->content), 160))
+@section('meta_keywords', $post->tags->pluck('name')->implode(', '))
+@section('og_type', 'article')
+@section('canonical_url', route('blog.show', $post->slug))
+@if($post->featured_image)
+    @php
+        $ogImage = Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image);
+    @endphp
+    @section('og_image', $ogImage)
+@endif
 
 @php
     $galleryImages = $post->gallery_images;
@@ -13,7 +22,97 @@
     }
 @endphp
 
+@section('structured_data')
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ route('blog.show', $post->slug) }}"
+    },
+    "headline": "{{ $post->title }}",
+    "description": "{{ Str::limit(strip_tags($post->excerpt ?? $post->content), 200) }}",
+    @if($post->featured_image)
+    "image": ["{{ Str::startsWith($post->featured_image, 'http') ? $post->featured_image : Storage::url($post->featured_image) }}"],
+    @endif
+    "datePublished": "{{ $post->created_at->toIso8601String() }}",
+    "dateModified": "{{ $post->updated_at->toIso8601String() }}",
+    "author": {
+        "@type": "Person",
+        "name": "{{ $post->user->name }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "{{ \App\Models\Setting::get('site_name', 'Vision Sphere') }}",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{{ asset('images/logo.svg') }}"
+        }
+    },
+    "wordCount": "{{ str_word_count(strip_tags($post->content)) }}",
+    "articleSection": "{{ $post->category?->name ?? 'General' }}"
+}
+</script>
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ route('home') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "{{ route('blog.index') }}"
+        },
+        @if($post->category)
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ $post->category->name }}",
+            "item": "{{ route('blog.category', $post->category->slug) }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "{{ $post->title }}"
+        }
+        @else
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ $post->title }}"
+        }
+        @endif
+    ]
+}
+</script>
+@endsection
+
 @section('content')
+<!-- Breadcrumb Navigation -->
+<nav class="bg-white border-b" aria-label="Breadcrumb">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <ol class="flex items-center space-x-2 text-sm text-gray-500">
+            <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+            <li><span class="mx-1">/</span></li>
+            <li><a href="{{ route('blog.index') }}" class="hover:text-rose-600 transition">Blog</a></li>
+            @if($post->category)
+            <li><span class="mx-1">/</span></li>
+            <li><a href="{{ route('blog.category', $post->category->slug) }}" class="hover:text-rose-600 transition">{{ $post->category->name }}</a></li>
+            @endif
+            <li><span class="mx-1">/</span></li>
+            <li class="text-gray-900 font-medium truncate max-w-xs">{{ $post->title }}</li>
+        </ol>
+    </div>
+</nav>
+
 <article>
     <!-- Featured Image -->
     @if($post->featured_image)
@@ -111,7 +210,7 @@
                         <img src="{{ $post->user->avatar ? asset('storage/' . $post->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name) . '&background=f43f5e&color=fff&size=100' }}" alt="{{ $post->user->name }}" class="w-20 h-20 rounded-full">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">{{ $post->user->name }}</h3>
-                            <p class="text-gray-600 mt-1">{{ $post->user->bio ?? 'Author at ' . \App\Models\Setting::get('site_name', 'VisionSphere – Explore your world of ideas and stories.') }}</p>
+                            <p class="text-gray-600 mt-1">{{ $post->user->bio ?? 'Author at ' . \App\Models\Setting::get('site_name', 'Vision Sphere') }}</p>
                             <div class="flex space-x-3 mt-3">
                                 @if($post->user->facebook_url)
                                 <a href="{{ $post->user->facebook_url }}" target="_blank" class="text-gray-400 hover:text-blue-600 transition">

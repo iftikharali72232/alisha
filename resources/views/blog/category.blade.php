@@ -1,8 +1,23 @@
 @extends('layouts.blog')
 
-@section('title', $category->name)
+@section('title', $category->name . ' Articles')
+@section('meta_description', 'Browse all ' . $category->name . ' articles on Vision Sphere. Discover insightful content, tips, and guides about ' . $category->name . '.')
+@section('canonical_url', route('blog.category', $category->slug))
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li><a href="{{ route('blog.index') }}" class="hover:text-rose-600 transition">Blog</a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">{{ $category->name }}</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Category Header -->
     <div class="bg-gradient-to-r from-rose-500 to-purple-600 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

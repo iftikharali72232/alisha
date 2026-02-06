@@ -1,8 +1,21 @@
 @extends('layouts.blog')
 
-@section('title', 'Gallery')
+@section('title', 'Photo Gallery')
+@section('meta_description', 'Browse the Vision Sphere photo gallery. Explore our collection of beautiful images and visual content.')
+@section('canonical_url', route('blog.gallery'))
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">Gallery</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Gallery Header -->
     <div class="bg-gradient-to-r from-purple-500 to-pink-600 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

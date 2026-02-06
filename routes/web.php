@@ -32,8 +32,13 @@ use App\Http\Controllers\User\ShopSettingsController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PublicShopController;
+use App\Http\Controllers\SitemapController;
 
 Route::get('/', [BlogController::class, 'index'])->name('home');
+
+// Sitemap & RSS Feed
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/feed', [SitemapController::class, 'feed'])->name('feed');
 
 // Blog Frontend Routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');

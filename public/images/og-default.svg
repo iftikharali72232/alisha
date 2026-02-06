@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333ea;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="260" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">Vision Sphere</text>
+  <text x="600" y="340" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.85)" text-anchor="middle">Explore your world of ideas and stories</text>
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="20" fill="rgba(255,255,255,0.65)" text-anchor="middle">Technology • Lifestyle • Business • Health • Beauty • Travel</text>
+</svg>

@@ -180,7 +180,7 @@
     <!-- Platform Footer -->
     <div class="mt-8 text-center py-6 border-t">
         <p class="text-gray-500">
-            <strong class="text-pink-600">Alisha Platform</strong> - For Women By Women
+            <strong class="text-pink-600">Vision Sphere</strong> - Explore Your World of Ideas
         </p>
         <p class="text-sm text-gray-400 mt-1">
             Built with ❤️ using Laravel, Alpine.js, and Tailwind CSS

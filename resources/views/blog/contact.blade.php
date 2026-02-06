@@ -1,8 +1,21 @@
 @extends('layouts.blog')
 
 @section('title', 'Contact Us')
+@section('meta_description', 'Get in touch with Vision Sphere. Have a question, want to collaborate, or need support? We would love to hear from you.')
+@section('canonical_url', route('blog.contact'))
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">Contact Us</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Contact Header -->
     <div class="bg-gradient-to-r from-rose-500 to-purple-600 py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

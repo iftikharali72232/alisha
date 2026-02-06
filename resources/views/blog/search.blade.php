@@ -1,8 +1,22 @@
 @extends('layouts.blog')
 
 @section('title', 'Search Results: ' . $query)
+@section('meta_description', 'Search results for "' . $query . '" on Vision Sphere.')
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li><a href="{{ route('blog.index') }}" class="hover:text-rose-600 transition">Blog</a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">Search: {{ $query }}</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Search Header -->
     <div class="bg-gradient-to-r from-rose-500 to-pink-600 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

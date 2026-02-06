@@ -1,6 +1,8 @@
 @extends('layouts.blog')
 
-@section('title', 'Home')
+@section('title', 'Home - Vision Sphere Blog')
+@section('meta_description', 'Vision Sphere - Explore insightful articles across technology, lifestyle, business, health, wellness, beauty, travel and more. Your premier destination for quality content.')
+@section('canonical_url', route('home'))
 
 @section('content')
     <!-- Hero Slider -->

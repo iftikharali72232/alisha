@@ -28,7 +28,7 @@
                     <img src="{{ asset('images/logo.svg?v=' . time()) }}" alt="VisionSphere Logo" class="w-14 h-14 rounded-lg shadow-sm" style="width: 56px; height: 56px;">
                     <div>
                         <h2 class="text-xl font-bold text-gray-800">VisionSphere – Explore your world of ideas and stories.</h2>
-                        <p class="text-xs text-gray-500">For women, by women</p>
+                        <p class="text-xs text-gray-500">Explore your world of ideas</p>
                     </div>
                 </div>
                 <button onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" class="lg:hidden text-gray-500 hover:text-rose-600 focus:outline-none p-2 rounded-md focus:ring-2 focus:ring-rose-300">

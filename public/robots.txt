@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /user/
+Disallow: /login
+Disallow: /register
+Disallow: /storage/
+
+# Sitemap
+Sitemap: https://sphere.vision-erp.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

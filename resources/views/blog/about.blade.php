@@ -1,13 +1,26 @@
 @extends('layouts.blog')
 
 @section('title', 'About Us')
+@section('meta_description', 'Learn about Vision Sphere - your premier destination for insightful articles, creative stories, thought-provoking content, and a thriving e-commerce marketplace.')
+@section('canonical_url', route('blog.about'))
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">About Us</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- About Header -->
     <div class="bg-gradient-to-r from-rose-500 to-purple-600 py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">About VisionSphere</h1>
-            <p class="text-white/80 text-lg max-w-2xl mx-auto">A platform dedicated to empowering women through stories, insights, and meaningful connections. For women, by women.</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">About Vision Sphere</h1>
+            <p class="text-white/80 text-lg max-w-2xl mx-auto">Your premier destination for insightful articles, creative stories, thought-provoking content, and a thriving e-commerce marketplace.</p>
         </div>
     </div>
 
@@ -17,9 +30,10 @@
             <div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
                 <div class="prose prose-lg text-gray-600">
-                    <p>{{ \App\Models\Setting::get('site_description', 'VisionSphere is a digital space created by women, for women. We believe every woman has a unique story worth sharing.') }}</p>
-                    <p>Founded with the vision to amplify women's voices, VisionSphere serves as a platform where women can share their experiences, insights, and perspectives on life, career, relationships, and personal growth.</p>
-                    <p>Our community celebrates the diversity of women's experiences while fostering meaningful connections. We believe that by sharing our stories, we empower each other to live more authentically and pursue our dreams with confidence.</p>
+                    <p>{{ \App\Models\Setting::get('site_description', 'Vision Sphere is your premier destination for insightful articles, creative stories, and thought-provoking content.') }}</p>
+                    <p>Founded with the vision to create a platform where knowledge meets creativity, Vision Sphere serves as a space for writers, readers, and entrepreneurs to share their experiences, insights, and expertise across technology, lifestyle, business, health, and more.</p>
+                    <p>Our community celebrates the diversity of ideas and perspectives while fostering meaningful connections. We believe that by sharing knowledge and stories, we empower each other to grow personally and professionally, and inspire positive change in our communities.</p>
+                    <p>Beyond our blog, Vision Sphere features a growing e-commerce marketplace where local businesses can showcase their products and connect with customers across Pakistan and beyond.</p>
                 </div>
             </div>
             <div class="relative">
@@ -59,21 +73,21 @@
                     <i class="fas fa-bullseye text-2xl text-rose-600"></i>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
-                <p class="text-gray-600">To create a supportive community where women can share their authentic stories, gain valuable insights, and connect with others on their journey of personal and professional growth.</p>
+                <p class="text-gray-600">To create a vibrant platform where writers, readers, and entrepreneurs can share authentic stories, gain valuable insights, and connect with others on their journey of personal and professional growth.</p>
             </div>
             <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-3xl p-8">
                 <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
                     <i class="fas fa-eye text-2xl text-purple-600"></i>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
-                <p class="text-gray-600">To become the leading platform that empowers women worldwide by celebrating their diverse experiences, fostering meaningful connections, and inspiring positive change in our communities.</p>
+                <p class="text-gray-600">To become a leading platform that empowers people worldwide by celebrating diverse ideas, fostering meaningful connections, and inspiring positive change through quality content and innovative e-commerce solutions.</p>
             </div>
         </div>
 
         <!-- Team Section -->
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">The passionate women behind VisionSphere, dedicated to amplifying women's voices and creating meaningful connections.</p>
+            <p class="text-gray-600 max-w-2xl mx-auto">The passionate team behind Vision Sphere, dedicated to creating quality content and building meaningful connections.</p>
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -82,7 +96,7 @@
                 <img src="{{ $member->avatar_url }}" alt="{{ $member->name }}" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover group-hover:scale-105 transition">
                 <h3 class="text-xl font-semibold text-gray-900">{{ $member->name }}</h3>
                 <p class="text-rose-600 text-sm mb-3">{{ $member->role?->name ?? 'Author' }}</p>
-                <p class="text-gray-600 text-sm mb-4">{{ $member->bio ?? 'Dedicated to empowering women through authentic storytelling and meaningful connections.' }}</p>
+                <p class="text-gray-600 text-sm mb-4">{{ $member->bio ?? 'Dedicated to creating quality content and empowering readers through insightful articles.' }}</p>
                 <div class="flex justify-center space-x-3">
                     @if($member->facebook_url)
                     <a href="{{ $member->facebook_url }}" target="_blank" class="text-gray-400 hover:text-blue-600 transition">
@@ -107,7 +121,7 @@
         <!-- CTA -->
         <div class="mt-20 bg-gradient-to-r from-rose-500 to-purple-600 rounded-3xl p-12 text-center">
             <h2 class="text-3xl font-bold text-white mb-4">Join Our Community</h2>
-            <p class="text-white/80 mb-8 max-w-2xl mx-auto">Ready to share your story or connect with inspiring women? Join VisionSphere today and be part of a community that celebrates women's voices and experiences.</p>
+            <p class="text-white/80 mb-8 max-w-2xl mx-auto">Ready to share your story or start your online shop? Join Vision Sphere today and be part of a growing community of writers, readers, and entrepreneurs.</p>
             <a href="{{ route('blog.contact') }}" class="inline-flex items-center px-8 py-3 bg-white text-rose-600 rounded-full font-medium hover:bg-rose-50 transition">
                 Get in Touch
                 <i class="fas fa-arrow-right ml-2"></i>

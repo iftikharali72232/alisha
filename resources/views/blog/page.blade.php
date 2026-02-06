@@ -2,8 +2,20 @@
 
 @section('title', $page->title)
 @section('meta_description', $page->meta_description ?? Str::limit(strip_tags($page->content), 160))
+@section('canonical_url', route('blog.page', $page->slug))
 
 @section('content')
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ route('home') }}" class="hover:text-rose-600 transition"><i class="fas fa-home"></i></a></li>
+                <li><span class="mx-1">/</span></li>
+                <li class="text-gray-900 font-medium">{{ $page->title }}</li>
+            </ol>
+        </div>
+    </nav>
+
     <!-- Page Header -->
     @if($page->image)
     <div class="relative h-80 bg-gray-900">
